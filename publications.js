@@ -2,12 +2,8 @@
 // Publications Renderer - Timeline Style
 // ========================================
 
-// Type order for sorting within year
 const TYPE_ORDER = { 'journal': 0, 'conference': 1, 'workshop': 2, 'national': 3 };
 
-/**
- * Copy text to clipboard and show feedback
- */
 function copyToClipboard(text, button) {
   navigator.clipboard.writeText(text).then(() => {
     const originalText = button.innerHTML;
@@ -20,9 +16,6 @@ function copyToClipboard(text, button) {
   });
 }
 
-/**
- * Generate publication links HTML
- */
 function getPubLinks(pub) {
   let links = '';
   if (pub.doi) {
@@ -49,12 +42,8 @@ function getPubLinks(pub) {
   return links;
 }
 
-/**
- * Render a single publication card for timeline
- */
 function renderPublicationCard(pub, highlightAuthor, index) {
   const typeClass = pub.type || 'conference';
-
   const authors = formatAuthors(pub.authors, highlightAuthor);
   const title = pub.title.replace(/^\{+/, '').replace(/\}+$/, '');
   const venue = (pub.venue || '').replace(/^\{+/, '').replace(/\}+$/, '');
@@ -81,12 +70,8 @@ function renderPublicationCard(pub, highlightAuthor, index) {
   `;
 }
 
-/**
- * Render simple publication card (for homepage featured, no timeline wrapper)
- */
 function renderSimpleCard(pub, highlightAuthor) {
   const typeClass = pub.type || 'conference';
-
   const authors = formatAuthors(pub.authors, highlightAuthor);
   const title = pub.title.replace(/^\{+/, '').replace(/\}+$/, '');
   const venue = (pub.venue || '').replace(/^\{+/, '').replace(/\}+$/, '');
@@ -110,9 +95,6 @@ function renderSimpleCard(pub, highlightAuthor) {
   `;
 }
 
-/**
- * Format authors helper
- */
 function formatAuthors(authorsList, highlightAuthor) {
   return authorsList
     .map(author => {
@@ -124,9 +106,6 @@ function formatAuthors(authorsList, highlightAuthor) {
     .join('; ');
 }
 
-/**
- * Render year marker for timeline
- */
 function renderYearMarker(year) {
   return `
     <div class="timeline-year-marker" data-year="${year}">
@@ -135,11 +114,7 @@ function renderYearMarker(year) {
   `;
 }
 
-/**
- * Render publications as timeline grouped by year
- */
 function renderTimeline(publications, highlightAuthor) {
-  // Sort by year (desc), then by type order
   const sorted = [...publications].sort((a, b) => {
     if (b.year !== a.year) return b.year - a.year;
     const typeA = TYPE_ORDER[a.type] !== undefined ? TYPE_ORDER[a.type] : 1;
@@ -165,9 +140,6 @@ function renderTimeline(publications, highlightAuthor) {
   return html;
 }
 
-/**
- * Initialize scroll animations
- */
 function initScrollAnimations() {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -185,9 +157,6 @@ function initScrollAnimations() {
   });
 }
 
-/**
- * Render stats section
- */
 function renderPubStats(stats) {
   return `
     <div class="stats">
@@ -211,12 +180,9 @@ function renderPubStats(stats) {
   `;
 }
 
-/**
- * Render filter buttons
- */
 function renderPubFilters() {
   return `
-    <div class="pub-filters">
+    <div class="pub-filters" id="pub-filters-container">
       <button class="pub-filter active" data-filter="all">${t('publications.filters.all')}</button>
       <button class="pub-filter" data-filter="journal">${t('publications.filters.journals')}</button>
       <button class="pub-filter" data-filter="conference">${t('publications.filters.conferences')}</button>
@@ -226,92 +192,63 @@ function renderPubFilters() {
   `;
 }
 
-/**
- * Initialize filter functionality - SIMPLIFIED VERSION
- */
 function initFilters() {
-  console.log('initFilters called');
+  const container = document.getElementById('pub-filters-container');
+  if (!container) return;
 
-  const buttons = document.querySelectorAll('.pub-filter');
-  console.log('Found filter buttons:', buttons.length);
-  console.log('Buttons NodeList:', buttons);
+  container.addEventListener('click', function (e) {
+    const button = e.target.closest('.pub-filter');
+    if (!button) return;
 
-  if (buttons.length === 0) {
-    console.error('ERROR: No filter buttons found! Cannot attach listeners.');
-    return;
-  }
+    const filter = button.dataset.filter;
 
-  buttons.forEach((btn, index) => {
-    console.log(`Attaching click listener to button ${index}, filter: ${btn.dataset.filter}`);
-    btn.addEventListener('click', function () {
-      const filter = this.dataset.filter;
-      console.log('=== FILTER CLICKED ===', filter);
+    // Update active button
+    container.querySelectorAll('.pub-filter').forEach(b => b.classList.remove('active'));
+    button.classList.add('active');
 
-      // Remove active from all buttons
-      buttons.forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
+    // Filter items and markers
+    const items = document.querySelectorAll('.timeline-item');
+    const markers = document.querySelectorAll('.timeline-year-marker');
 
-      // Get fresh lists each time
-      const allItems = document.querySelectorAll('.timeline-item');
-      const allMarkers = document.querySelectorAll('.timeline-year-marker');
-
-      console.log('Total items:', allItems.length);
-      console.log('Total markers:', allMarkers.length);
-
-      // Filter items
-      let visibleCount = 0;
-      allItems.forEach(item => {
-        const category = item.dataset.category;
-        if (filter === 'all' || category === filter) {
-          item.classList.remove('hidden-item');
-          visibleCount++;
-        } else {
-          item.classList.add('hidden-item');
-        }
-      });
-
-      console.log('Visible items after filter:', visibleCount);
-
-      // Filter year markers
-      allMarkers.forEach(marker => {
-        const year = marker.dataset.year;
-
-        // Check if any visible items have this year
-        let hasItems = false;
-        allItems.forEach(item => {
-          if (!item.classList.contains('hidden-item') && item.dataset.year === year) {
-            hasItems = true;
-          }
-        });
-
-        if (hasItems) {
-          marker.classList.remove('hidden-item');
-        } else {
-          marker.classList.add('hidden-item');
-          console.log('Hiding year marker:', year);
-        }
-      });
-
-      // Update connectors
-      updateConnectors();
+    items.forEach(item => {
+      const category = item.dataset.category;
+      if (filter === 'all' || category === filter) {
+        item.classList.remove('hidden-item');
+      } else {
+        item.classList.add('hidden-item');
+      }
     });
-  });
 
-  console.log(`Successfully attached ${buttons.length} event listeners`);
+    markers.forEach(marker => {
+      const year = marker.dataset.year;
+      let hasVisibleItems = false;
+
+      items.forEach(item => {
+        if (!item.classList.contains('hidden-item') && item.dataset.year === year) {
+          hasVisibleItems = true;
+        }
+      });
+
+      if (hasVisibleItems) {
+        marker.classList.remove('hidden-item');
+      } else {
+        marker.classList.add('hidden-item');
+      }
+    });
+
+    // Update connectors
+    updateConnectors();
+  });
 }
 
-/**
- * Update timeline connectors
- */
 function updateConnectors() {
-  const allItems = document.querySelectorAll('.timeline-item');
-  const allMarkers = document.querySelectorAll('.timeline-year-marker');
-  const allElements = [...allMarkers, ...allItems].sort((a, b) => {
+  const items = document.querySelectorAll('.timeline-item');
+  const markers = document.querySelectorAll('.timeline-year-marker');
+  const allElements = [...markers, ...items].sort((a, b) => {
     return a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
   });
 
-  // Remove all connector classes first
-  allItems.forEach(item => item.classList.remove('no-connect-down'));
+  items.forEach(item => item.classList.remove('no-connect-down'));
 
   let lastVisibleItem = null;
 
@@ -333,54 +270,31 @@ function updateConnectors() {
   }
 }
 
-/**
- * Load and render publications from JSON
- */
 async function loadPublications() {
-  console.log('=== loadPublications START ===');
   try {
-    console.log('Fetching publications.json...');
     const response = await fetch('publications.json');
     const data = await response.json();
-    console.log('Data loaded:', data);
-
     const { publications, stats, highlightAuthor } = data;
 
-    // Render stats
     const statsEl = document.getElementById('site-stats');
     if (statsEl) {
-      console.log('Rendering stats...');
       statsEl.innerHTML = renderPubStats(stats);
     }
 
-    // Render filters
     const filtersEl = document.getElementById('site-filters');
     if (filtersEl) {
-      console.log('Rendering filters...');
       filtersEl.innerHTML = renderPubFilters();
     }
 
-    // Render timeline for publications page
     const listEl = document.getElementById('publications-list');
     if (listEl) {
-      console.log('Rendering timeline...');
       listEl.innerHTML = renderTimeline(publications, highlightAuthor);
-
-      console.log('Setting up animations and filters...');
-      // Initialize scroll animations
       setTimeout(() => {
-        console.log('setTimeout executed, calling initScrollAnimations...');
         initScrollAnimations();
-        console.log('Calling initFilters...');
-        // Initialize filters AFTER animations
         initFilters();
-        console.log('initFilters called');
       }, 100);
-    } else {
-      console.log('ERROR: publications-list element not found!');
     }
 
-    // Render featured publications (for homepage - simple cards, no timeline)
     const featuredEl = document.getElementById('featured-publications');
     if (featuredEl) {
       const featured = publications.filter(p => p.featured);
@@ -389,19 +303,15 @@ async function loadPublications() {
         .join('');
     }
 
-    // Update config stats
     if (CONFIG && CONFIG.stats) {
       CONFIG.stats = stats;
     }
 
-    console.log('=== loadPublications END ===');
-
   } catch (error) {
-    console.error('ERROR in loadPublications:', error);
+    console.error('Error loading publications:', error);
   }
 }
 
-// Export for use
 if (typeof module !== 'undefined') {
   module.exports = { loadPublications, renderPublicationCard };
 }
