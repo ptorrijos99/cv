@@ -145,13 +145,32 @@ def parse_bib_file(bib_path: str) -> list[dict]:
             
     # Sort
     def sort_key(p):
+        # 1. Year (Descending)
         try:
             year = int(p.get('year', 0))
         except:
             year = 0
-        first_author = p.get('authors', [''])[0] if p.get('authors') else ''
-        is_first = 0 if 'Torrijos' in first_author else 1
-        return (-year, is_first, p.get('title', ''))
+            
+        # 2. Ranking Score (Ascending: lower is better)
+        # Q1/CORE A* = 0, Q2/CORE A = 1, Q3/CORE B = 2, Q4/CORE C = 3, None = 4
+        ranking = p.get('ranking', '').upper().strip()
+        ranking_score = 4 # Default lowest
+        
+        if 'Q1' in ranking or 'CORE A*' in ranking: score = 0
+        elif 'Q2' in ranking or 'CORE A' in ranking: score = 1
+        elif 'Q3' in ranking or 'CORE B' in ranking: score = 2
+        elif 'Q4' in ranking or 'CORE C' in ranking: score = 3
+        else: score = 4
+        
+        # 3. Author Position (Ascending: lower is better)
+        authors = p.get('authors', [])
+        author_pos = 99
+        for idx, author in enumerate(authors):
+            if 'Torrijos' in author:
+                author_pos = idx
+                break
+                
+        return (-year, score, author_pos, p.get('title', ''))
     
     publications.sort(key=sort_key)
     
