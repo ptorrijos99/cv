@@ -563,7 +563,22 @@ a:hover {
 }
 
 /* Shared pub-link styles handled above block 435 in previous edit */
-background: linear-gradient(to right, transparent, var(--border), transparent);
+/* Year Dividers */
+.year-divider {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin: var(--space-xl) 0 var(--space-lg);
+}
+
+.year-divider:first-child {
+    margin-top: 0;
+}
+
+.year-divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--border), transparent);
 }
 
 .year-divider-text {
@@ -580,6 +595,12 @@ background: linear-gradient(to right, transparent, var(--border), transparent);
     align-items: stretch;
     border-radius: var(--radius);
     overflow: hidden;
+    border: 1px solid transparent;
+    transition: border-color var(--transition);
+}
+
+.pub-link-group:hover {
+    border-color: var(--border);
 }
 
 .pub-link-group .pub-link {
@@ -591,25 +612,31 @@ background: linear-gradient(to right, transparent, var(--border), transparent);
 .pub-copy {
     display: inline-flex;
     align-items: center;
-    gap: 2px;
-    padding: 4px 6px;
-    background: var(--border);
+    justify-content: center;
     border: none;
+    background: transparent;
+    background-color: rgba(0, 0, 0, 0.03);
+    padding: 4px 8px;
     cursor: pointer;
-    font-size: 0.65rem;
+    border-left: 1px solid rgba(0, 0, 0, 0.05);
     color: var(--text-light);
-    font-family: 'Monaco', 'Consolas', monospace;
+    font-size: 0.7rem;
     transition: all var(--transition);
+    font-family: var(--font-sans);
 }
 
 .pub-copy:hover {
-    background: var(--text-light);
-    color: var(--text-inverse);
+    background-color: rgba(0, 0, 0, 0.08);
+    color: var(--text);
 }
 
 .pub-copy.copied {
-    background: var(--primary);
-    color: var(--text-inverse);
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.pub-copy-id {
+    display: none;
 }
 
 .pub-copy-arxiv {
