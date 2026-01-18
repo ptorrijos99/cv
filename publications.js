@@ -249,8 +249,6 @@ function initFilters() {
 
         if (matches) {
           item.classList.remove('hidden-item');
-          item.style.display = ''; // Clear inline cleanup
-          // Re-trigger animation if needed
           setTimeout(() => item.classList.add('visible'), 10);
         } else {
           item.classList.add('hidden-item');
@@ -266,10 +264,8 @@ function initFilters() {
         const yearText = yearBadge.textContent.trim();
         let hasVisibleItems = false;
 
-        // Find if there are visible items for this year
         for (const item of itemsArray) {
           const itemYear = (item.dataset.year || '').trim();
-          // Check if item is displayed AND belongs to this year
           if (!item.classList.contains('hidden-item') && itemYear === yearText) {
             hasVisibleItems = true;
             break;
@@ -278,41 +274,49 @@ function initFilters() {
 
         if (hasVisibleItems) {
           marker.classList.remove('hidden-item');
-          marker.style.display = '';
           setTimeout(() => marker.classList.add('visible'), 10);
         } else {
           marker.classList.add('hidden-item');
         }
       });
 
-      // 3. Update timeline connectors (connect-down)
-      // Iterate through ALL flow elements (markers and items)
+      // 3. Update timeline connectors
+      // Mark items that should NOT connect down
       const allElements = document.querySelectorAll('.timeline-item, .timeline-year-marker');
       let lastVisibleItem = null;
 
+      // First, remove all no-connect-down classes
+      itemsArray.forEach(item => item.classList.remove('no-connect-down'));
+
       allElements.forEach(el => {
-        // Skip hidden elements
         if (el.classList.contains('hidden-item')) return;
 
         if (el.classList.contains('timeline-item')) {
-          // If we had a previous item, it connects to this one
+          // If we had a previous item, it CAN connect to this one
+          // So we don't mark it with no-connect-down
           if (lastVisibleItem) {
-            lastVisibleItem.classList.add('connect-down');
+            lastVisibleItem.classList.remove('no-connect-down');
           }
-          // This item is now the candidate, but doesn't connect yet
-          el.classList.remove('connect-down');
+          // This item becomes the new candidate
           lastVisibleItem = el;
         } else if (el.classList.contains('timeline-year-marker')) {
-          // A marker breaks the chain. Previous item stops here.
+          // A marker breaks the chain
+          // The previous item should NOT connect down
+          if (lastVisibleItem) {
+            lastVisibleItem.classList.add('no-connect-down');
+          }
           lastVisibleItem = null;
         }
       });
-      // The very last visible item of the loop correctly remains without connect-down
 
+      // The very last visible item should not connect
+      if (lastVisibleItem) {
+        lastVisibleItem.classList.add('no-connect-down');
+      }
     });
   });
 
-  // Trigger default filter to set initial state correctly
+  // Trigger default filter to set initial state
   const activeBtn = document.querySelector('.pub-filter.active');
   if (activeBtn) activeBtn.click();
 }

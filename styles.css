@@ -392,15 +392,10 @@ a:hover {
     opacity: 0.6;
     transition: opacity 0.3s ease;
     z-index: 0;
-    display: none;
-    /* Hidden by default, JS enables it */
 }
 
-.timeline-item.connect-down::before {
-    display: block;
-}
-
-/* Ensure last child never shows it (failsafe) */
+/* Hide connector when explicitly marked or last child */
+.timeline-item.no-connect-down::before,
 .timeline-item:last-child::before {
     display: none;
 }
@@ -795,4 +790,8 @@ a:hover {
     overflow: hidden;
     clip: rect(0, 0, 0, 0);
     border: 0;
+}
+
+.hidden-item {
+    display: none !important;
 }
