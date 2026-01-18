@@ -36,12 +36,8 @@ const CONFIG = {
         national: '#64748b',
     },
 
-    // Publication stats
-    stats: {
-        journals: 3,
-        conferences: 7,
-        national: 3
-    }
+    // Publication stats (populated dynamically from publications.json)
+    stats: null
 };
 
 // Apply config to CSS variables

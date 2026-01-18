@@ -95,20 +95,25 @@ function renderFooter() {
   `;
 }
 
-// Render Stats Component
+// Render Stats Component (only if stats are loaded)
 function renderStats() {
+  if (!CONFIG.stats) return ''; // Stats will be rendered by loadPublications
   return `
     <div class="stats">
       <div class="stat">
-        <div class="stat-number">${CONFIG.stats.journals}</div>
+        <div class="stat-number">${CONFIG.stats.journals || 0}</div>
         <div class="stat-label">${t('publications.stats.journals')}</div>
       </div>
       <div class="stat">
-        <div class="stat-number">${CONFIG.stats.conferences}</div>
+        <div class="stat-number">${CONFIG.stats.conferences || 0}</div>
         <div class="stat-label">${t('publications.stats.conferences')}</div>
       </div>
       <div class="stat">
-        <div class="stat-number">${CONFIG.stats.national}</div>
+        <div class="stat-number">${CONFIG.stats.workshops || 0}</div>
+        <div class="stat-label">${t('publications.stats.workshops')}</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">${CONFIG.stats.national || 0}</div>
         <div class="stat-label">${t('publications.stats.national')}</div>
       </div>
     </div>
@@ -122,6 +127,7 @@ function renderFilters() {
       <button class="pub-filter active" data-filter="all">${t('publications.filters.all')}</button>
       <button class="pub-filter" data-filter="journal">${t('publications.filters.journals')}</button>
       <button class="pub-filter" data-filter="conference">${t('publications.filters.conferences')}</button>
+      <button class="pub-filter" data-filter="workshop">${t('publications.filters.workshops')}</button>
       <button class="pub-filter" data-filter="national">${t('publications.filters.national')}</button>
     </div>
   `;
@@ -139,17 +145,13 @@ function initComponents(currentPage = 'home') {
   const headerEl = document.getElementById('site-header');
   const navEl = document.getElementById('site-nav');
   const footerEl = document.getElementById('site-footer');
-  const statsEl = document.getElementById('site-stats');
-  const filtersEl = document.getElementById('site-filters');
 
   if (headerEl) headerEl.innerHTML = renderHeader(currentPage);
   if (navEl) navEl.innerHTML = renderNav(currentPage);
   if (footerEl) footerEl.innerHTML = renderFooter();
-  if (statsEl) statsEl.innerHTML = renderStats();
-  if (filtersEl) filtersEl.innerHTML = renderFilters();
 
-  // Initialize filters if present
-  if (filtersEl) initFilters();
+  // Note: stats and filters are rendered by loadPublications() 
+  // to ensure data is loaded from publications.json first
 }
 
 // Export for use in other modules

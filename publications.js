@@ -307,7 +307,8 @@ async function loadPublications() {
         .join('');
     }
 
-    if (CONFIG && CONFIG.stats) {
+    // Update CONFIG with loaded stats for use by other components
+    if (CONFIG) {
       CONFIG.stats = stats;
     }
 

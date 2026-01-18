@@ -29,32 +29,8 @@ function loadLanguagePreference() {
 // ========================================
 // Publication Filters
 // ========================================
-function initFilters() {
-    const filterButtons = document.querySelectorAll('.pub-filter');
-    const pubCards = document.querySelectorAll('.pub-card');
-
-    filterButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const filter = button.getAttribute('data-filter');
-
-            // Update active button
-            filterButtons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-
-            // Filter publications
-            pubCards.forEach(card => {
-                const category = card.getAttribute('data-category') || '';
-                if (filter === 'all' || category.includes(filter)) {
-                    card.style.display = '';
-                    card.removeAttribute('data-hidden');
-                } else {
-                    card.style.display = 'none';
-                    card.setAttribute('data-hidden', 'true');
-                }
-            });
-        });
-    });
-}
+// NOTE: initFilters is defined in publications.js with full timeline support.
+// Do not define it here to avoid conflicts.
 
 // ========================================
 // Smooth Scroll for Anchor Links

@@ -221,6 +221,7 @@ def main():
     print(f"Found {len(publications)} publications:")
     print(f"  - Journals: {stats['journals']}")
     print(f"  - Conferences: {stats['conferences']}")
+    print(f"  - Workshops: {stats['workshops']}")
     print(f"  - National: {stats['national']}")
     
     # Write JSON
