@@ -792,8 +792,12 @@ a:hover {
     border: 0;
 }
 
-.hidden-item {
+/* Force hidden items to be completely invisible */
+.hidden-item,
+.hidden-item.visible {
     display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
 }
 
 /* Ensure children of hidden items are also hidden */

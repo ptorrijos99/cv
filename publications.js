@@ -234,91 +234,89 @@ function initFilters() {
   const items = document.querySelectorAll('.timeline-item');
   const itemsArray = Array.from(items);
 
+  // Define the filter logic as a reusable function
+  function applyFilter(filter) {
+    // 1. Filter items
+    itemsArray.forEach(item => {
+      const category = (item.dataset.category || '').trim();
+      const matches = filter === 'all' || category === filter;
+
+      if (matches) {
+        item.classList.remove('hidden-item');
+        setTimeout(() => item.classList.add('visible'), 10);
+      } else {
+        item.classList.add('hidden-item');
+        item.classList.remove('visible');
+      }
+    });
+
+    // 2. Update year markers visibility
+    document.querySelectorAll('.timeline-year-marker').forEach(marker => {
+      const yearBadge = marker.querySelector('.timeline-year-badge');
+      if (!yearBadge) return;
+
+      const yearText = yearBadge.textContent.trim();
+      let hasVisibleItems = false;
+
+      for (const item of itemsArray) {
+        const itemYear = (item.dataset.year || '').trim();
+        if (!item.classList.contains('hidden-item') && itemYear === yearText) {
+          hasVisibleItems = true;
+          break;
+        }
+      }
+
+      if (hasVisibleItems) {
+        marker.classList.remove('hidden-item');
+        setTimeout(() => marker.classList.add('visible'), 10);
+      } else {
+        marker.classList.add('hidden-item');
+        marker.classList.remove('visible');
+      }
+    });
+
+    // 3. Update timeline connectors
+    const allElements = document.querySelectorAll('.timeline-item, .timeline-year-marker');
+    let lastVisibleItem = null;
+
+    // First, remove all no-connect-down classes
+    itemsArray.forEach(item => item.classList.remove('no-connect-down'));
+
+    allElements.forEach(el => {
+      if (el.classList.contains('hidden-item')) return;
+
+      if (el.classList.contains('timeline-item')) {
+        if (lastVisibleItem) {
+          lastVisibleItem.classList.remove('no-connect-down');
+        }
+        lastVisibleItem = el;
+      } else if (el.classList.contains('timeline-year-marker')) {
+        if (lastVisibleItem) {
+          lastVisibleItem.classList.add('no-connect-down');
+        }
+        lastVisibleItem = null;
+      }
+    });
+
+    if (lastVisibleItem) {
+      lastVisibleItem.classList.add('no-connect-down');
+    }
+  }
+
+  // Attach click handlers
   buttons.forEach(btn => {
     btn.addEventListener('click', () => {
-      // Toggle active class
       buttons.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-
       const filter = btn.dataset.filter;
-
-      // 1. Filter items
-      itemsArray.forEach(item => {
-        const category = (item.dataset.category || '').trim();
-        const matches = filter === 'all' || category === filter;
-
-        if (matches) {
-          item.classList.remove('hidden-item');
-          setTimeout(() => item.classList.add('visible'), 10);
-        } else {
-          item.classList.add('hidden-item');
-          item.classList.remove('visible');
-        }
-      });
-
-      // 2. Update year markers visibility
-      document.querySelectorAll('.timeline-year-marker').forEach(marker => {
-        const yearBadge = marker.querySelector('.timeline-year-badge');
-        if (!yearBadge) return;
-
-        const yearText = yearBadge.textContent.trim();
-        let hasVisibleItems = false;
-
-        for (const item of itemsArray) {
-          const itemYear = (item.dataset.year || '').trim();
-          if (!item.classList.contains('hidden-item') && itemYear === yearText) {
-            hasVisibleItems = true;
-            break;
-          }
-        }
-
-        if (hasVisibleItems) {
-          marker.classList.remove('hidden-item');
-          setTimeout(() => marker.classList.add('visible'), 10);
-        } else {
-          marker.classList.add('hidden-item');
-        }
-      });
-
-      // 3. Update timeline connectors
-      // Mark items that should NOT connect down
-      const allElements = document.querySelectorAll('.timeline-item, .timeline-year-marker');
-      let lastVisibleItem = null;
-
-      // First, remove all no-connect-down classes
-      itemsArray.forEach(item => item.classList.remove('no-connect-down'));
-
-      allElements.forEach(el => {
-        if (el.classList.contains('hidden-item')) return;
-
-        if (el.classList.contains('timeline-item')) {
-          // If we had a previous item, it CAN connect to this one
-          // So we don't mark it with no-connect-down
-          if (lastVisibleItem) {
-            lastVisibleItem.classList.remove('no-connect-down');
-          }
-          // This item becomes the new candidate
-          lastVisibleItem = el;
-        } else if (el.classList.contains('timeline-year-marker')) {
-          // A marker breaks the chain
-          // The previous item should NOT connect down
-          if (lastVisibleItem) {
-            lastVisibleItem.classList.add('no-connect-down');
-          }
-          lastVisibleItem = null;
-        }
-      });
-
-      // The very last visible item should not connect
-      if (lastVisibleItem) {
-        lastVisibleItem.classList.add('no-connect-down');
-      }
+      applyFilter(filter);
     });
   });
 
-  // Trigger default filter to set initial state
-  const activeBtn = document.querySelector('.pub-filter.active');
-  if (activeBtn) activeBtn.click();
+  // Manually trigger initial "all" filter after a delay to ensure DOM is ready
+  setTimeout(() => {
+    applyFilter('all');
+  }, 150);
 }
 
 /**
