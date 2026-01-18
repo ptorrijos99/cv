@@ -2,48 +2,75 @@
 // Publications Renderer
 // ========================================
 
-// arXiv icon SVG
-const ARXIV_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zm-1.5 18.75v-1.5h3v1.5h-3zm3.75-4.5c-.75.75-1.125 1.125-1.125 2.25h-2.25c0-1.875.75-2.625 1.5-3.375.75-.75 1.125-1.125 1.125-1.875 0-.75-.75-1.5-1.5-1.5s-1.5.75-1.5 1.5H8.25c0-2.25 1.5-3.75 3.75-3.75s3.75 1.5 3.75 3.75c0 1.5-.75 2.25-1.5 3z"/></svg>';
+// Type order for sorting within year
+const TYPE_ORDER = { 'journal': 0, 'conference': 1, 'national': 2 };
+
+/**
+ * Copy text to clipboard and show feedback
+ */
+function copyToClipboard(text, button) {
+  navigator.clipboard.writeText(text).then(() => {
+    const originalText = button.innerHTML;
+    button.innerHTML = '✓';
+    button.classList.add('copied');
+    setTimeout(() => {
+      button.innerHTML = originalText;
+      button.classList.remove('copied');
+    }, 1500);
+  });
+}
 
 /**
  * Render a single publication card
  */
 function renderPublicationCard(pub, highlightAuthor) {
-    const typeClass = pub.type || 'conference';
+  const typeClass = pub.type || 'conference';
 
-    // Format authors with highlighting
-    const authors = pub.authors
-        .map(author => {
-            if (author.includes(highlightAuthor.split(',')[0])) {
-                return `<strong>${author}</strong>`;
-            }
-            return author;
-        })
-        .join('; ');
+  // Format authors with highlighting
+  const authors = pub.authors
+    .map(author => {
+      if (author.includes(highlightAuthor.split(',')[0])) {
+        return `<strong>${author}</strong>`;
+      }
+      return author;
+    })
+    .join('; ');
 
-    // Clean title (remove leading { if present)
-    const title = pub.title.replace(/^\{+/, '').replace(/\}+$/, '');
+  // Clean title (remove leading { if present)
+  const title = pub.title.replace(/^\{+/, '').replace(/\}+$/, '');
 
-    // Clean venue
-    const venue = (pub.venue || '').replace(/^\{+/, '').replace(/\}+$/, '');
+  // Clean venue
+  const venue = (pub.venue || '').replace(/^\{+/, '').replace(/\}+$/, '');
 
-    // Build links
-    let links = '';
-    if (pub.doi) {
-        links += `<a href="https://doi.org/${pub.doi}" target="_blank" rel="noopener" class="pub-link">DOI</a>`;
-    }
-    if (pub.arxiv) {
-        links += `<a href="https://arxiv.org/abs/${pub.arxiv}" target="_blank" rel="noopener" class="pub-link pub-link-arxiv">${ARXIV_ICON} arXiv</a>`;
-    }
-    if (pub.url && !pub.doi) {
-        links += `<a href="${pub.url}" target="_blank" rel="noopener" class="pub-link">Link</a>`;
-    }
+  // Build links with copy buttons
+  let links = '';
+  if (pub.doi) {
+    links += `
+      <div class="pub-link-group">
+        <a href="https://doi.org/${pub.doi}" target="_blank" rel="noopener" class="pub-link">DOI</a>
+        <button class="pub-copy" onclick="copyToClipboard('${pub.doi}', this)" title="Copy DOI">
+          <span class="pub-copy-id">${pub.doi}</span>
+        </button>
+      </div>`;
+  }
+  if (pub.arxiv) {
+    links += `
+      <div class="pub-link-group">
+        <a href="https://arxiv.org/abs/${pub.arxiv}" target="_blank" rel="noopener" class="pub-link pub-link-arxiv">arXiv</a>
+        <button class="pub-copy pub-copy-arxiv" onclick="copyToClipboard('${pub.arxiv}', this)" title="Copy arXiv ID">
+          <span class="pub-copy-id">${pub.arxiv}</span>
+        </button>
+      </div>`;
+  }
+  if (pub.url && !pub.doi) {
+    links += `<a href="${pub.url}" target="_blank" rel="noopener" class="pub-link">Link</a>`;
+  }
 
-    // Ranking badge
-    const ranking = pub.ranking ? `<span class="pub-rank">${pub.ranking}</span>` : '';
+  // Ranking badge
+  const ranking = pub.ranking ? `<span class="pub-rank">${pub.ranking}</span>` : '';
 
-    return `
-    <article class="pub-card" data-category="${typeClass}">
+  return `
+    <article class="pub-card" data-category="${typeClass}" data-year="${pub.year}">
       <div class="pub-stripe"></div>
       <div class="pub-content">
         <div class="pub-header">
@@ -60,10 +87,47 @@ function renderPublicationCard(pub, highlightAuthor) {
 }
 
 /**
+ * Render year separator
+ */
+function renderYearDivider(year) {
+  return `
+    <div class="year-divider">
+      <span class="year-divider-line"></span>
+      <span class="year-divider-text">${year}</span>
+      <span class="year-divider-line"></span>
+    </div>
+  `;
+}
+
+/**
+ * Render publications grouped by year
+ */
+function renderPublicationsWithYears(publications, highlightAuthor) {
+  // Sort by year (desc), then by type order
+  const sorted = [...publications].sort((a, b) => {
+    if (b.year !== a.year) return b.year - a.year;
+    return (TYPE_ORDER[a.type] || 1) - (TYPE_ORDER[b.type] || 1);
+  });
+
+  let html = '';
+  let currentYear = null;
+
+  for (const pub of sorted) {
+    if (pub.year !== currentYear) {
+      currentYear = pub.year;
+      html += renderYearDivider(currentYear);
+    }
+    html += renderPublicationCard(pub, highlightAuthor);
+  }
+
+  return html;
+}
+
+/**
  * Render stats section
  */
 function renderPubStats(stats) {
-    return `
+  return `
     <div class="stats">
       <div class="stat">
         <div class="stat-number">${stats.journals}</div>
@@ -85,7 +149,7 @@ function renderPubStats(stats) {
  * Render filter buttons
  */
 function renderPubFilters() {
-    return `
+  return `
     <div class="pub-filters">
       <button class="pub-filter active" data-filter="all">${t('publications.filters.all')}</button>
       <button class="pub-filter" data-filter="journal">${t('publications.filters.journals')}</button>
@@ -99,54 +163,52 @@ function renderPubFilters() {
  * Load and render publications from JSON
  */
 async function loadPublications() {
-    try {
-        const response = await fetch('publications.json');
-        const data = await response.json();
+  try {
+    const response = await fetch('publications.json');
+    const data = await response.json();
 
-        const { publications, stats, highlightAuthor } = data;
+    const { publications, stats, highlightAuthor } = data;
 
-        // Render stats
-        const statsEl = document.getElementById('site-stats');
-        if (statsEl) {
-            statsEl.innerHTML = renderPubStats(stats);
-        }
-
-        // Render filters
-        const filtersEl = document.getElementById('site-filters');
-        if (filtersEl) {
-            filtersEl.innerHTML = renderPubFilters();
-            // Re-initialize filter buttons
-            initFilters();
-        }
-
-        // Render all publications
-        const listEl = document.getElementById('publications-list');
-        if (listEl) {
-            listEl.innerHTML = publications
-                .map(pub => renderPublicationCard(pub, highlightAuthor))
-                .join('');
-        }
-
-        // Render featured publications (for homepage)
-        const featuredEl = document.getElementById('featured-publications');
-        if (featuredEl) {
-            const featured = publications.filter(p => p.featured);
-            featuredEl.innerHTML = featured
-                .map(pub => renderPublicationCard(pub, highlightAuthor))
-                .join('');
-        }
-
-        // Update config stats (for other uses)
-        if (CONFIG && CONFIG.stats) {
-            CONFIG.stats = stats;
-        }
-
-    } catch (error) {
-        console.error('Error loading publications:', error);
+    // Render stats
+    const statsEl = document.getElementById('site-stats');
+    if (statsEl) {
+      statsEl.innerHTML = renderPubStats(stats);
     }
+
+    // Render filters
+    const filtersEl = document.getElementById('site-filters');
+    if (filtersEl) {
+      filtersEl.innerHTML = renderPubFilters();
+      // Re-initialize filter buttons
+      initFilters();
+    }
+
+    // Render all publications with year dividers
+    const listEl = document.getElementById('publications-list');
+    if (listEl) {
+      listEl.innerHTML = renderPublicationsWithYears(publications, highlightAuthor);
+    }
+
+    // Render featured publications (for homepage - no year dividers)
+    const featuredEl = document.getElementById('featured-publications');
+    if (featuredEl) {
+      const featured = publications.filter(p => p.featured);
+      featuredEl.innerHTML = featured
+        .map(pub => renderPublicationCard(pub, highlightAuthor))
+        .join('');
+    }
+
+    // Update config stats (for other uses)
+    if (CONFIG && CONFIG.stats) {
+      CONFIG.stats = stats;
+    }
+
+  } catch (error) {
+    console.error('Error loading publications:', error);
+  }
 }
 
 // Export for use
 if (typeof module !== 'undefined') {
-    module.exports = { loadPublications, renderPublicationCard };
+  module.exports = { loadPublications, renderPublicationCard };
 }

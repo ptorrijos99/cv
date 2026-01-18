@@ -448,6 +448,81 @@ a:hover {
     color: #8a1515;
 }
 
+/* Year Dividers */
+.year-divider {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin: var(--space-xl) 0 var(--space-lg);
+}
+
+.year-divider:first-child {
+    margin-top: 0;
+}
+
+.year-divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--border), transparent);
+}
+
+.year-divider-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary);
+    background: var(--background);
+    padding: 0 var(--space-sm);
+}
+
+/* Publication Link Groups */
+.pub-link-group {
+    display: inline-flex;
+    align-items: stretch;
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.pub-link-group .pub-link {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    margin: 0;
+}
+
+.pub-copy {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 4px 6px;
+    background: var(--border);
+    border: none;
+    cursor: pointer;
+    font-size: 0.65rem;
+    color: var(--text-light);
+    font-family: 'Monaco', 'Consolas', monospace;
+    transition: all var(--transition);
+}
+
+.pub-copy:hover {
+    background: var(--text-light);
+    color: var(--text-inverse);
+}
+
+.pub-copy.copied {
+    background: var(--primary);
+    color: var(--text-inverse);
+}
+
+.pub-copy-arxiv {
+    color: #b31b1b;
+}
+
+.pub-copy-id {
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 /* ========================================
    Stats
    ======================================== */
