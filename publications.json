@@ -14,7 +14,7 @@
         "Aledo, Juan A.",
         "Gámez, José A."
       ],
-      "title": "{Bayesian",
+      "title": "Bayesian Network Structural Consensus via Greedy Min-Cut Analysis",
       "venue": "AAAI 2026",
       "year": 2026,
       "doi": "",
@@ -25,11 +25,11 @@
       "id": "Torrijos2026ML",
       "type": "journal",
       "authors": [
-        "Torrijos,  Pablo",
-        "Puerta,  José M.",
-        "Gámez,  José A."
+        "Torrijos, Pablo",
+        "Puerta, José M.",
+        "Gámez, José A."
       ],
-      "title": "{FedGES: A Federated Learning Approach for Bayesian Network Structure Learning",
+      "title": "FedGES: A Federated Learning Approach for Bayesian Network Structure Learning",
       "year": 2026,
       "doi": "10.1007/s10994-025-06939-2",
       "venue": "Machine Learning",
@@ -46,7 +46,7 @@
         "Gámez, José A.",
         "Puerta, José M."
       ],
-      "title": "{Federated",
+      "title": "Federated Learning of AnDE Classifiers",
       "venue": "WAFL 2025",
       "year": 2026
     },
@@ -59,7 +59,7 @@
         "Puerta, José M.",
         "Aledo, Juan A"
       ],
-      "title": "{Algoritmos",
+      "title": "Algoritmos Genéticos para la Fusión Eficiente de Redes Bayesianas mediante Eliminación de Enlaces Previa a la Fusión",
       "venue": "MAEB 2025",
       "year": 2025,
       "url": "https://openreview.net/forum?id=VDZcB9wl8m"
@@ -68,12 +68,12 @@
       "id": "Torrijos2025GECCO",
       "type": "conference",
       "authors": [
-        "Torrijos,  Pablo",
-        "Gámez,  José A.",
-        "Puerta,  José M.",
+        "Torrijos, Pablo",
+        "Gámez, José A.",
+        "Puerta, José M.",
         "Juan A. Aledo"
       ],
-      "title": "{Genetic",
+      "title": "Genetic Algorithms for Tractable Bayesian Network Fusion via Pre-Fusion Edge Pruning",
       "venue": "GECCO '25",
       "year": 2025,
       "doi": "10.1145/3712256.3726333",
@@ -84,11 +84,11 @@
       "id": "Torrijos2025DS",
       "type": "conference",
       "authors": [
-        "Torrijos,  Pablo",
-        "Gámez,  José A.",
-        "Puerta,  José M."
+        "Torrijos, Pablo",
+        "Gámez, José A.",
+        "Puerta, José M."
       ],
-      "title": "{FedGES:",
+      "title": "FedGES: A Federated Learning Approach for Bayesian Network Structure Learning",
       "venue": "DS 2024",
       "year": 2024,
       "doi": "10.1007/978-3-031-78980-9_6",
@@ -99,12 +99,12 @@
       "id": "Torrijos2024IDEAL",
       "type": "conference",
       "authors": [
-        "Torrijos,  Pablo",
-        "Alfaro,  Juan C.",
-        "Gámez,  José A.",
-        "Puerta,  José M."
+        "Torrijos, Pablo",
+        "Alfaro, Juan C.",
+        "Gámez, José A.",
+        "Puerta, José M."
       ],
-      "title": "{Federated",
+      "title": "Federated Learning with Discriminative Naive Bayes Classifier",
       "venue": "IDEAL 2024",
       "year": 2024,
       "doi": "10.1007/978-3-031-77738-7_27",
@@ -119,7 +119,7 @@
         "Gámez, José A.",
         "Puerta, José M."
       ],
-      "title": "{Fusión",
+      "title": "Fusión Estructural de Redes Bayesianas con Treewidth Limitado utilizando Algoritmos Genéticos",
       "venue": "CAEPIA 2024",
       "year": 2024
     },
@@ -127,11 +127,11 @@
       "id": "Torrijos2024CEC",
       "type": "conference",
       "authors": [
-        "Torrijos,  Pablo",
-        "Gámez,  José A.",
-        "Puerta,  José M."
+        "Torrijos, Pablo",
+        "Gámez, José A.",
+        "Puerta, José M."
       ],
-      "title": "{Structural",
+      "title": "Structural Fusion of Bayesian Networks with Limited Treewidth Using Genetic Algorithms",
       "venue": "IEEE CEC 2024",
       "year": 2024,
       "doi": "10.1109/cec60901.2024.10611976",
@@ -141,42 +141,27 @@
       "id": "Laborda2024IJAR",
       "type": "journal",
       "authors": [
-        "Laborda,  Jorge D.",
-        "Torrijos,  Pablo",
-        "Puerta,  José M.",
-        "Gámez,  José A."
+        "Laborda, Jorge D.",
+        "Torrijos, Pablo",
+        "Puerta, José M.",
+        "Gámez, José A."
       ],
-      "title": "Distributed fusion-based algorithms for learning high-dimensional {Bayesian",
+      "title": "Distributed fusion-based algorithms for learning high-dimensional Bayesian Networks: Testing ring and star topologies",
       "year": 2024,
       "doi": "10.1016/j.ijar.2024.109302",
       "venue": "Int. Journal of Approx. Reasoning",
       "ranking": "Q2"
     },
     {
-      "id": "Laborda2024KBS",
-      "type": "journal",
-      "authors": [
-        "Laborda,  Jorge D.",
-        "Torrijos,  Pablo",
-        "Puerta,  José M.",
-        "Gámez,  José A."
-      ],
-      "title": "Parallel structural learning of Bayesian networks: Iterative divide and conquer algorithm based on structural fusion",
-      "year": 2024,
-      "doi": "10.1016/j.knosys.2024.111840",
-      "venue": "Knowledge-Based Systems",
-      "ranking": "Q1"
-    },
-    {
       "id": "Laborda2024MCTS",
       "type": "conference",
       "authors": [
-        "Laborda,  Jorge D.",
-        "Torrijos,  Pablo",
-        "Puerta,  José M.",
-        "Gámez,  José A."
+        "Laborda, Jorge D.",
+        "Torrijos, Pablo",
+        "Puerta, José M.",
+        "Gámez, José A."
       ],
-      "title": "{Enhancing",
+      "title": "Enhancing Bayesian Network Structural Learning with Monte Carlo Tree Search",
       "venue": "IPMU 2024",
       "year": 2024,
       "doi": "10.1007/978-3-031-74003-9_32",
@@ -187,23 +172,39 @@
       "id": "Laborda2024CAEPIA",
       "type": "national",
       "authors": [
-        "Laborda,  Jorge D.",
+        "Laborda, Jorge D.",
         "Torrijos, Pablo",
         "Puerta, José M.",
         "Gámez, José A."
       ],
-      "title": "{Mejora",
+      "title": "Mejora del Aprendizaje Estructural de Redes Bayesianas con Árboles de Búsqueda de Monte Carlo",
       "venue": "CAEPIA 2024",
       "year": 2024
+    },
+    {
+      "id": "Laborda2024KBS",
+      "type": "journal",
+      "authors": [
+        "Laborda, Jorge D.",
+        "Torrijos, Pablo",
+        "Puerta, José M.",
+        "Gámez, José A."
+      ],
+      "title": "Parallel structural learning of Bayesian networks: Iterative divide and conquer algorithm based on structural fusion",
+      "year": 2024,
+      "doi": "10.1016/j.knosys.2024.111840",
+      "venue": "Knowledge-Based Systems",
+      "ranking": "Q1"
     },
     {
       "id": "Torrijos2023EANN",
       "type": "conference",
       "authors": [
         "Torrijos, Pablo",
-        "G{á"
+        "Gámez, José A.",
+        "Puerta, José M."
       ],
-      "title": "{MiniAnDE:",
+      "title": "MiniAnDE: A Reduced AnDE Ensemble to Deal with Microarray Data",
       "venue": "EANN 2023",
       "year": 2023,
       "doi": "10.1007/978-3-031-34204-2_12",
@@ -214,12 +215,12 @@
       "id": "Laborda2023ECSQARU",
       "type": "conference",
       "authors": [
-        "Laborda,  Jorge D.",
-        "Torrijos,  Pablo",
-        "Puerta,  José M.",
-        "Gámez,  José A."
+        "Laborda, Jorge D.",
+        "Torrijos, Pablo",
+        "Puerta, José M.",
+        "Gámez, José A."
       ],
-      "title": "{A",
+      "title": "A Ring-Based Distributed Algorithm for Learning High-Dimensional Bayesian Networks",
       "venue": "ECSQARU 2023",
       "year": 2023,
       "doi": "10.1007/978-3-031-45608-4_10",
