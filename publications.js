@@ -201,7 +201,7 @@ function renderPubStats(stats) {
       </div>
       <div class="stat">
         <div class="stat-number">${stats.workshops}</div>
-        <div class="stat-label">Workshops</div>
+        <div class="stat-label">Int. Workshops</div>
       </div>
       <div class="stat">
         <div class="stat-number">${stats.national}</div>
@@ -220,7 +220,7 @@ function renderPubFilters() {
       <button class="pub-filter active" data-filter="all">${t('publications.filters.all')}</button>
       <button class="pub-filter" data-filter="journal">${t('publications.filters.journals')}</button>
       <button class="pub-filter" data-filter="conference">${t('publications.filters.conferences')}</button>
-      <button class="pub-filter" data-filter="workshop">Workshops</button>
+      <button class="pub-filter" data-filter="workshop">Int. Workshops</button>
       <button class="pub-filter" data-filter="national">${t('publications.filters.national')}</button>
     </div>
   `;
@@ -247,13 +247,13 @@ function initFilters() {
 
       // Filter items
       itemsArray.forEach(item => {
-        const category = item.dataset.category;
-        const matches = filter === 'all' || category === filter; // Strict match since 'workshop' is its own category now
+        const category = (item.dataset.category || '').trim();
+        const matches = filter === 'all' || category === filter;
 
         if (matches) {
           item.style.display = '';
           // Re-trigger animation if needed
-          item.classList.add('visible');
+          setTimeout(() => item.classList.add('visible'), 10);
         } else {
           item.style.display = 'none';
         }
@@ -261,22 +261,25 @@ function initFilters() {
 
       // Update year markers visibility
       document.querySelectorAll('.timeline-year-marker').forEach(marker => {
-        const year = marker.querySelector('.timeline-year-badge').textContent;
+        const yearBadge = marker.querySelector('.timeline-year-badge');
+        if (!yearBadge) return;
+
+        const yearText = yearBadge.textContent.trim();
+
         // Find if there are visible items for this year
-        // This assumes the DOM structure is flat (marker, item, item, marker...)
-        // We need to check the items between this marker and the next
-
-        // Easier approach: Check all visible items and collect their years
-        const visibleYears = new Set();
-        itemsArray.forEach(item => {
-          if (item.style.display !== 'none') {
-            visibleYears.add(item.dataset.year); // Assuming data-year attribute exists
+        let hasVisibleItems = false;
+        for (const item of itemsArray) {
+          const itemYear = (item.dataset.year || '').trim();
+          // Check if item is displayed AND belongs to this year
+          if (item.style.display !== 'none' && itemYear === yearText) {
+            hasVisibleItems = true;
+            break;
           }
-        });
+        }
 
-        if (visibleYears.has(year)) {
+        if (hasVisibleItems) {
           marker.style.display = '';
-          marker.classList.add('visible');
+          setTimeout(() => marker.classList.add('visible'), 10);
         } else {
           marker.style.display = 'none';
         }
