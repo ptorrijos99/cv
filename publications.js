@@ -328,35 +328,47 @@ function updateConnectors() {
  * Load and render publications from JSON
  */
 async function loadPublications() {
+  console.log('=== loadPublications START ===');
   try {
+    console.log('Fetching publications.json...');
     const response = await fetch('publications.json');
     const data = await response.json();
+    console.log('Data loaded:', data);
 
     const { publications, stats, highlightAuthor } = data;
 
     // Render stats
     const statsEl = document.getElementById('site-stats');
     if (statsEl) {
+      console.log('Rendering stats...');
       statsEl.innerHTML = renderPubStats(stats);
     }
 
     // Render filters
     const filtersEl = document.getElementById('site-filters');
     if (filtersEl) {
+      console.log('Rendering filters...');
       filtersEl.innerHTML = renderPubFilters();
     }
 
     // Render timeline for publications page
     const listEl = document.getElementById('publications-list');
     if (listEl) {
+      console.log('Rendering timeline...');
       listEl.innerHTML = renderTimeline(publications, highlightAuthor);
 
+      console.log('Setting up animations and filters...');
       // Initialize scroll animations
       setTimeout(() => {
+        console.log('setTimeout executed, calling initScrollAnimations...');
         initScrollAnimations();
+        console.log('Calling initFilters...');
         // Initialize filters AFTER animations
         initFilters();
+        console.log('initFilters called');
       }, 100);
+    } else {
+      console.log('ERROR: publications-list element not found!');
     }
 
     // Render featured publications (for homepage - simple cards, no timeline)
@@ -373,8 +385,10 @@ async function loadPublications() {
       CONFIG.stats = stats;
     }
 
+    console.log('=== loadPublications END ===');
+
   } catch (error) {
-    console.error('Error loading publications:', error);
+    console.error('ERROR in loadPublications:', error);
   }
 }
 
