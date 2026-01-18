@@ -315,6 +315,7 @@ a:hover {
 .timeline {
     position: relative;
     padding-left: 30px;
+    /* Ensure container has height for lines if needed, but relative should suffice */
 }
 
 /* Year Markers */
@@ -382,7 +383,8 @@ a:hover {
     position: absolute;
     left: -21px;
     top: 32px;
-    bottom: -16px;
+    /* This connects to the next item */
+    height: calc(100% + var(--space-md));
     width: 4px;
     border-radius: 2px;
     background: var(--color-journal);
@@ -390,6 +392,8 @@ a:hover {
     transition: opacity 0.3s ease;
 }
 
+/* Hide line for element before a year marker if we want strict separation, 
+   but usually we want flow. Hiding for last child is key. */
 .timeline-item:last-child::before {
     display: none;
 }
@@ -398,12 +402,17 @@ a:hover {
     opacity: 1;
 }
 
+/* Type specific line colors */
 .timeline-item[data-category="conference"]::before {
     background: var(--color-conference);
 }
 
 .timeline-item[data-category="national"]::before {
     background: var(--color-national);
+}
+
+.timeline-item[data-category="workshop"]::before {
+    background: var(--color-workshop);
 }
 
 .timeline-item:hover .timeline-dot {
@@ -440,6 +449,16 @@ a:hover {
     box-shadow: 0 0 10px rgba(100, 116, 139, 0.5);
 }
 
+.timeline-item[data-category="workshop"] .timeline-dot {
+    border-color: var(--color-workshop);
+}
+
+.timeline-item[data-category="workshop"]:hover .timeline-dot {
+    background: var(--color-workshop);
+    box-shadow: 0 0 10px rgba(126, 34, 206, 0.5);
+}
+
+
 .pub-card {
     display: grid;
     grid-template-columns: 4px 1fr;
@@ -453,10 +472,6 @@ a:hover {
 .pub-card:hover {
     box-shadow: 0 2px 8px var(--shadow);
     border-color: var(--border);
-}
-
-.pub-card[data-hidden="true"] {
-    display: none;
 }
 
 /* Color stripe */
@@ -474,6 +489,10 @@ a:hover {
 
 .pub-card[data-category*="national"] .pub-stripe {
     background: var(--color-national);
+}
+
+.pub-card[data-category*="workshop"] .pub-stripe {
+    background: var(--color-workshop);
 }
 
 .pub-content {
@@ -503,6 +522,10 @@ a:hover {
 
 .pub-card[data-category*="national"] .pub-venue {
     color: var(--color-national);
+}
+
+.pub-card[data-category*="workshop"] .pub-venue {
+    color: var(--color-workshop);
 }
 
 .pub-year {
@@ -539,60 +562,8 @@ a:hover {
     font-weight: 600;
 }
 
-.pub-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-xs);
-    margin-top: var(--space-sm);
-}
-
-.pub-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: var(--primary);
-    padding: 4px 8px;
-    background: var(--surface-alt);
-    border-radius: var(--radius);
-    transition: background var(--transition);
-}
-
-.pub-link:hover {
-    background: var(--border);
-    color: var(--primary-dark);
-}
-
-.pub-link svg {
-    width: 12px;
-    height: 12px;
-}
-
-.pub-link-arxiv {
-    color: #b31b1b;
-}
-
-.pub-link-arxiv:hover {
-    color: #8a1515;
-}
-
-/* Year Dividers */
-.year-divider {
-    display: flex;
-    align-items: center;
-    gap: var(--space-md);
-    margin: var(--space-xl) 0 var(--space-lg);
-}
-
-.year-divider:first-child {
-    margin-top: 0;
-}
-
-.year-divider-line {
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--border), transparent);
+/* Shared pub-link styles handled above block 435 in previous edit */
+background: linear-gradient(to right, transparent, var(--border), transparent);
 }
 
 .year-divider-text {

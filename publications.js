@@ -3,7 +3,7 @@
 // ========================================
 
 // Type order for sorting within year
-const TYPE_ORDER = { 'journal': 0, 'conference': 1, 'national': 2 };
+const TYPE_ORDER = { 'journal': 0, 'conference': 1, 'workshop': 2, 'national': 3 };
 
 /**
  * Copy text to clipboard and show feedback
@@ -21,28 +21,9 @@ function copyToClipboard(text, button) {
 }
 
 /**
- * Render a single publication card for timeline
+ * Generate publication links HTML
  */
-function renderPublicationCard(pub, highlightAuthor, index) {
-  const typeClass = pub.type || 'conference';
-
-  // Format authors with highlighting
-  const authors = pub.authors
-    .map(author => {
-      if (author.includes(highlightAuthor.split(',')[0])) {
-        return `<strong>${author}</strong>`;
-      }
-      return author;
-    })
-    .join('; ');
-
-  // Clean title
-  const title = pub.title.replace(/^\{+/, '').replace(/\}+$/, '');
-
-  // Clean venue
-  const venue = (pub.venue || '').replace(/^\{+/, '').replace(/\}+$/, '');
-
-  // Build links with copy buttons
+function getPubLinks(pub) {
   let links = '';
   if (pub.doi) {
     links += `
@@ -65,8 +46,19 @@ function renderPublicationCard(pub, highlightAuthor, index) {
   if (pub.url && !pub.doi) {
     links += `<a href="${pub.url}" target="_blank" rel="noopener" class="pub-link">Link</a>`;
   }
+  return links;
+}
 
-  // Ranking badge
+/**
+ * Render a single publication card for timeline
+ */
+function renderPublicationCard(pub, highlightAuthor, index) {
+  const typeClass = pub.type || 'conference';
+
+  const authors = formatAuthors(pub.authors, highlightAuthor);
+  const title = pub.title.replace(/^\{+/, '').replace(/\}+$/, '');
+  const venue = (pub.venue || '').replace(/^\{+/, '').replace(/\}+$/, '');
+  const links = getPubLinks(pub);
   const ranking = pub.ranking ? `<span class="pub-rank">${pub.ranking}</span>` : '';
 
   return `
@@ -95,26 +87,10 @@ function renderPublicationCard(pub, highlightAuthor, index) {
 function renderSimpleCard(pub, highlightAuthor) {
   const typeClass = pub.type || 'conference';
 
-  const authors = pub.authors
-    .map(author => {
-      if (author.includes(highlightAuthor.split(',')[0])) {
-        return `<strong>${author}</strong>`;
-      }
-      return author;
-    })
-    .join('; ');
-
+  const authors = formatAuthors(pub.authors, highlightAuthor);
   const title = pub.title.replace(/^\{+/, '').replace(/\}+$/, '');
   const venue = (pub.venue || '').replace(/^\{+/, '').replace(/\}+$/, '');
-
-  let links = '';
-  if (pub.doi) {
-    links += `<a href="https://doi.org/${pub.doi}" target="_blank" rel="noopener" class="pub-link">DOI</a>`;
-  }
-  if (pub.arxiv) {
-    links += `<a href="https://arxiv.org/abs/${pub.arxiv}" target="_blank" rel="noopener" class="pub-link pub-link-arxiv">arXiv</a>`;
-  }
-
+  const links = getPubLinks(pub);
   const ranking = pub.ranking ? `<span class="pub-rank">${pub.ranking}</span>` : '';
 
   return `
@@ -132,6 +108,20 @@ function renderSimpleCard(pub, highlightAuthor) {
       </div>
     </article>
   `;
+}
+
+/**
+ * Format authors helper
+ */
+function formatAuthors(authorsList, highlightAuthor) {
+  return authorsList
+    .map(author => {
+      if (author.includes(highlightAuthor.split(',')[0])) {
+        return `<strong>${author}</strong>`;
+      }
+      return author;
+    })
+    .join('; ');
 }
 
 /**

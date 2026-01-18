@@ -84,27 +84,45 @@ def parse_bib_file(bib_path: str) -> list[dict]:
         # Build publication object
         pub = {
             'id': key,
+            # Default type mapping
             'type': 'journal' if entry_type == 'article' else 'conference',
         }
         
         # Normalize fields
         for field_name, field_value in fields.items():
             # Clean LaTeX formatting
-            # Replace {{Text}} with Text, {Text} with Text
+            # First, handle double braces {{Title}} -> Title
             cleaned = field_value
-            while '{' in cleaned and '}' in cleaned:
-                cleaned = re.sub(r'\{([^{}]*)\}', r'\1', cleaned)
+            if cleaned.startswith('{') and cleaned.endswith('}'):
+                cleaned = cleaned[1:-1]
             
+            # Remove remaining external braces if they wrap the whole content
+            if cleaned.startswith('{') and cleaned.endswith('}'):
+                 # Check if they are matching outer braces
+                 brace_balance = 0
+                 is_wrapped = True
+                 for i, char in enumerate(cleaned[:-1]):
+                     if char == '{': brace_balance += 1
+                     elif char == '}': brace_balance -= 1
+                     if brace_balance == 0:
+                         is_wrapped = False
+                         break
+                 if is_wrapped:
+                     cleaned = cleaned[1:-1]
+
+            # Replace escaped chars
             cleaned = cleaned.replace("\\&", "&")
             cleaned = cleaned.replace("\\'a", "á").replace("\\'e", "é").replace("\\'i", "í").replace("\\'o", "ó").replace("\\'u", "ú").replace("\\~n", "ñ")
             cleaned = cleaned.replace("\\'A", "Á").replace("\\'E", "É").replace("\\'I", "Í").replace("\\'O", "Ó").replace("\\'U", "Ú").replace("\\~N", "Ñ")
+            
             # Remove double spaces
             cleaned = ' '.join(cleaned.split())
             
             if field_name == 'author':
                 pub['authors'] = [a.strip() for a in cleaned.split(' and ')]
             elif field_name == 'title':
-                pub['title'] = cleaned
+                # Remove any remaining wrapping braces that might be around words
+                pub['title'] = cleaned.replace('{', '').replace('}', '')
             elif field_name == 'year':
                 try:
                     pub['year'] = int(cleaned)
@@ -152,7 +170,8 @@ def calculate_stats(publications: list[dict]) -> dict:
     stats = {
         'journals': 0,
         'conferences': 0,
-        'national': 0
+        'national': 0,
+        'workshops': 0
     }
     
     for pub in publications:
@@ -161,6 +180,8 @@ def calculate_stats(publications: list[dict]) -> dict:
             stats['journals'] += 1
         elif pub_type == 'national':
             stats['national'] += 1
+        elif pub_type == 'workshop':
+             stats['workshops'] += 1
         else:
             stats['conferences'] += 1
     
