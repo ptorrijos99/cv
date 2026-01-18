@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Pablo Torrijos Arenas - Predoctoral Researcher in federated learning and Bayesian networks">
+    <meta name="author" content="Pablo Torrijos Arenas">
+    <title>Pablo Torrijos Arenas | Researcher</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+</head>
+
+<body>
+    <!-- Shared Components (injected by JavaScript) -->
+    <div id="site-header"></div>
+    <div id="site-nav"></div>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- About Section -->
+        <section class="section" id="about-section"></section>
+
+        <!-- Featured Publications -->
+        <section class="section">
+            <h2 class="section-title" id="featured-title"></h2>
+
+            <div class="pub-list" id="featured-publications">
+                <!-- Machine Learning 2026 -->
+                <article class="pub-card" data-category="journal">
+                    <div class="pub-stripe"></div>
+                    <div class="pub-content">
+                        <div class="pub-header">
+                            <span class="pub-venue">Machine Learning</span>
+                            <span class="pub-year">2026</span>
+                            <span class="pub-rank">Q2</span>
+                        </div>
+                        <h3 class="pub-title">FedGES: A Federated Learning Approach for Bayesian Network Structure
+                            Learning</h3>
+                        <p class="pub-authors"><strong>Torrijos, Pablo</strong>; Puerta, José M.; Gámez, José A.</p>
+                        <a href="https://doi.org/10.1007/s10994-025-06939-2" target="_blank" rel="noopener"
+                            class="pub-link">DOI</a>
+                    </div>
+                </article>
+
+                <!-- GECCO 2025 -->
+                <article class="pub-card" data-category="conference">
+                    <div class="pub-stripe"></div>
+                    <div class="pub-content">
+                        <div class="pub-header">
+                            <span class="pub-venue">GECCO '25</span>
+                            <span class="pub-year">2025</span>
+                            <span class="pub-rank">CORE A</span>
+                        </div>
+                        <h3 class="pub-title">Genetic Algorithms for Tractable Bayesian Network Fusion via Pre-Fusion
+                            Edge Pruning</h3>
+                        <p class="pub-authors"><strong>Torrijos, Pablo</strong>; Gámez, José A.; Puerta, José M.; Aledo,
+                            Juan A.</p>
+                        <a href="https://doi.org/10.1145/3712256.3726333" target="_blank" rel="noopener"
+                            class="pub-link">DOI</a>
+                    </div>
+                </article>
+
+                <!-- KBS 2024 -->
+                <article class="pub-card" data-category="journal">
+                    <div class="pub-stripe"></div>
+                    <div class="pub-content">
+                        <div class="pub-header">
+                            <span class="pub-venue">Knowledge-Based Systems</span>
+                            <span class="pub-year">2024</span>
+                            <span class="pub-rank">Q1</span>
+                        </div>
+                        <h3 class="pub-title">Parallel structural learning of Bayesian networks: Iterative divide and
+                            conquer algorithm based on structural fusion</h3>
+                        <p class="pub-authors">Laborda, Jorge D.; <strong>Torrijos, Pablo</strong>; Puerta, José M.;
+                            Gámez, José A.</p>
+                        <a href="https://doi.org/10.1016/j.knosys.2024.111840" target="_blank" rel="noopener"
+                            class="pub-link">DOI</a>
+                    </div>
+                </article>
+            </div>
+
+            <p class="view-all-link" id="view-all-link"></p>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <div id="site-footer"></div>
+
+    <!-- Scripts (order matters!) -->
+    <script src="config.js"></script>
+    <script src="i18n.js"></script>
+    <script src="components.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Page-specific initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set about section content
+            const aboutSection = document.getElementById('about-section');
+            if (aboutSection) {
+                aboutSection.innerHTML = `
+          <h2 class="section-title">${t('home.aboutTitle')}</h2>
+          <p class="about-text">${t('home.aboutText')}</p>
+        `;
+            }
+
+            // Set featured title
+            const featuredTitle = document.getElementById('featured-title');
+            if (featuredTitle) {
+                featuredTitle.textContent = t('home.featuredTitle');
+            }
+
+            // Set view all link
+            const viewAllLink = document.getElementById('view-all-link');
+            if (viewAllLink) {
+                viewAllLink.innerHTML = `<a href="publications.html">${t('home.viewAll')}</a>`;
+            }
+        });
+    </script>
+</body>
+
+</html>

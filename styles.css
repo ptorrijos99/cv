@@ -1,0 +1,486 @@
+/* ========================================
+   CSS Variables & Theme - Academic Style
+   ======================================== */
+:root {
+    /* Colors - UCLM Institutional */
+    --primary: #B30033;
+    --primary-dark: #8a0028;
+    --primary-light: #d4004a;
+    --accent: #1e3a5f;
+
+    /* Light theme */
+    --text: #1f2937;
+    --text-light: #6b7280;
+    --text-inverse: #ffffff;
+    --background: #ffffff;
+    --surface: #f8f9fa;
+    --surface-alt: #f1f3f5;
+    --border: #dee2e6;
+    --shadow: rgba(0, 0, 0, 0.08);
+
+    /* Publication colors */
+    --color-journal: #B30033;
+    --color-conference: #d97706;
+    --color-national: #64748b;
+
+    /* Spacing */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-2xl: 3rem;
+
+    /* Typography */
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+    /* Transitions */
+    --transition: 200ms ease;
+
+    /* Border radius */
+    --radius: 6px;
+    --radius-lg: 10px;
+}
+
+
+
+/* ========================================
+   Reset & Base
+   ======================================== */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-sans);
+    background: var(--background);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 15px;
+}
+
+a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: color var(--transition);
+}
+
+a:hover {
+    color: var(--primary-dark);
+}
+
+/* ========================================
+   Header - Compact Academic Style
+   ======================================== */
+.header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: var(--text-inverse);
+    padding: var(--space-xl) 0;
+    position: relative;
+}
+
+.header-content {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 var(--space-lg);
+    display: grid;
+    grid-template-columns: 100px 1fr auto;
+    gap: var(--space-lg);
+    align-items: center;
+}
+
+.header-photo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.4);
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.header-info h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 2px;
+    letter-spacing: -0.02em;
+}
+
+.header-role {
+    font-size: 1rem;
+    opacity: 0.95;
+    margin-bottom: var(--space-xs);
+}
+
+.header-affiliation {
+    font-size: 0.85rem;
+    opacity: 0.85;
+    line-height: 1.4;
+}
+
+.header-links {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 16px;
+    align-items: start;
+}
+
+.header-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-inverse);
+    font-size: 0.85rem;
+    opacity: 0.9;
+    transition: opacity var(--transition);
+}
+
+.header-link:hover {
+    opacity: 1;
+    color: var(--text-inverse);
+}
+
+.header-link svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+.header-link-email {
+    grid-column: 1 / -1;
+    margin-bottom: 4px;
+}
+
+
+/* ========================================
+   Navigation
+   ======================================== */
+.nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-content {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 var(--space-lg);
+    display: flex;
+    gap: var(--space-xl);
+}
+
+.nav-link {
+    display: block;
+    padding: var(--space-md) 0;
+    color: var(--text-light);
+    font-weight: 500;
+    font-size: 0.9rem;
+    border-bottom: 2px solid transparent;
+    transition: all var(--transition);
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+}
+
+/* ========================================
+   Main Content
+   ======================================== */
+.main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: var(--space-xl) var(--space-lg) var(--space-2xl);
+}
+
+.section {
+    margin-bottom: var(--space-2xl);
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: 2px solid var(--border);
+}
+
+/* ========================================
+   About Section
+   ======================================== */
+.about-text {
+    font-size: 1rem;
+    color: var(--text);
+    line-height: 1.75;
+}
+
+.about-text strong {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+/* ========================================
+   Publications
+   ======================================== */
+.pub-filters {
+    display: flex;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
+    flex-wrap: wrap;
+}
+
+.pub-filter {
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--background);
+    color: var(--text-light);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.pub-filter:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.pub-filter.active {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: var(--text-inverse);
+}
+
+.pub-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.pub-card {
+    display: grid;
+    grid-template-columns: 4px 1fr;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: box-shadow var(--transition), border-color var(--transition);
+}
+
+.pub-card:hover {
+    box-shadow: 0 2px 8px var(--shadow);
+    border-color: var(--border);
+}
+
+.pub-card[data-hidden="true"] {
+    display: none;
+}
+
+/* Color stripe */
+.pub-stripe {
+    background: var(--border);
+}
+
+.pub-card[data-category*="journal"] .pub-stripe {
+    background: var(--color-journal);
+}
+
+.pub-card[data-category*="conference"] .pub-stripe {
+    background: var(--color-conference);
+}
+
+.pub-card[data-category*="national"] .pub-stripe {
+    background: var(--color-national);
+}
+
+.pub-content {
+    padding: var(--space-md);
+}
+
+.pub-header {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-sm);
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+}
+
+.pub-venue {
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.pub-card[data-category*="journal"] .pub-venue {
+    color: var(--color-journal);
+}
+
+.pub-card[data-category*="conference"] .pub-venue {
+    color: var(--color-conference);
+}
+
+.pub-card[data-category*="national"] .pub-venue {
+    color: var(--color-national);
+}
+
+.pub-year {
+    color: var(--text-light);
+    font-size: 0.8rem;
+}
+
+.pub-rank {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--text-light);
+    background: var(--surface-alt);
+    padding: 2px 6px;
+    border-radius: 3px;
+    text-transform: uppercase;
+}
+
+.pub-title {
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 4px;
+    line-height: 1.45;
+    color: var(--text);
+}
+
+.pub-authors {
+    color: var(--text-light);
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+.pub-authors strong {
+    color: var(--text);
+    font-weight: 600;
+}
+
+.pub-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--primary);
+    margin-top: var(--space-sm);
+    padding: 4px 8px;
+    background: var(--surface-alt);
+    border-radius: var(--radius);
+    transition: background var(--transition);
+}
+
+.pub-link:hover {
+    background: var(--border);
+    color: var(--primary-dark);
+}
+
+.pub-link svg {
+    width: 12px;
+    height: 12px;
+}
+
+/* ========================================
+   Stats
+   ======================================== */
+.stats {
+    display: flex;
+    gap: var(--space-xl);
+    margin-bottom: var(--space-lg);
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    margin-top: 4px;
+}
+
+/* ========================================
+   Footer
+   ======================================== */
+.footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: var(--space-lg) 0;
+    text-align: center;
+    color: var(--text-light);
+    font-size: 0.85rem;
+}
+
+/* ========================================
+   Responsive
+   ======================================== */
+@media (max-width: 768px) {
+    .header-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: var(--space-md);
+    }
+
+    .header-photo {
+        margin: 0 auto;
+        width: 90px;
+        height: 90px;
+    }
+
+    .header-links {
+        align-items: center;
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: var(--space-md);
+    }
+
+    .header-info h1 {
+        font-size: 1.5rem;
+    }
+
+    .nav-content {
+        justify-content: center;
+    }
+
+    .stats {
+        justify-content: center;
+    }
+
+    .pub-filters {
+        justify-content: center;
+    }
+}
+
+/* ========================================
+   Utility
+   ======================================== */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
