@@ -234,11 +234,18 @@ function initFilters() {
 
   const buttons = document.querySelectorAll('.pub-filter');
   console.log('Found filter buttons:', buttons.length);
+  console.log('Buttons NodeList:', buttons);
 
-  buttons.forEach(btn => {
+  if (buttons.length === 0) {
+    console.error('ERROR: No filter buttons found! Cannot attach listeners.');
+    return;
+  }
+
+  buttons.forEach((btn, index) => {
+    console.log(`Attaching click listener to button ${index}, filter: ${btn.dataset.filter}`);
     btn.addEventListener('click', function () {
       const filter = this.dataset.filter;
-      console.log('Filter clicked:', filter);
+      console.log('=== FILTER CLICKED ===', filter);
 
       // Remove active from all buttons
       buttons.forEach(b => b.classList.remove('active'));
@@ -289,6 +296,8 @@ function initFilters() {
       updateConnectors();
     });
   });
+
+  console.log(`Successfully attached ${buttons.length} event listeners`);
 }
 
 /**
