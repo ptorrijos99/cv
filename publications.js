@@ -229,6 +229,66 @@ function renderPubFilters() {
 /**
  * Load and render publications from JSON
  */
+/**
+ * Initialize filter functionality
+ */
+function initFilters() {
+  const buttons = document.querySelectorAll('.pub-filter');
+  const items = document.querySelectorAll('.timeline-item');
+  const itemsArray = Array.from(items);
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      // Toggle active class
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const filter = btn.dataset.filter;
+
+      // Filter items
+      itemsArray.forEach(item => {
+        const category = item.dataset.category;
+        const matches = filter === 'all' || category === filter; // Strict match since 'workshop' is its own category now
+
+        if (matches) {
+          item.style.display = '';
+          // Re-trigger animation if needed
+          item.classList.add('visible');
+        } else {
+          item.style.display = 'none';
+        }
+      });
+
+      // Update year markers visibility
+      document.querySelectorAll('.timeline-year-marker').forEach(marker => {
+        const year = marker.querySelector('.timeline-year-badge').textContent;
+        // Find if there are visible items for this year
+        // This assumes the DOM structure is flat (marker, item, item, marker...)
+        // We need to check the items between this marker and the next
+
+        // Easier approach: Check all visible items and collect their years
+        const visibleYears = new Set();
+        itemsArray.forEach(item => {
+          if (item.style.display !== 'none') {
+            visibleYears.add(item.dataset.year); // Assuming data-year attribute exists
+          }
+        });
+
+        if (visibleYears.has(year)) {
+          marker.style.display = '';
+          marker.classList.add('visible');
+        } else {
+          marker.style.display = 'none';
+        }
+      });
+
+    });
+  });
+}
+
+/**
+ * Load and render publications from JSON
+ */
 async function loadPublications() {
   try {
     const response = await fetch('publications.json');
@@ -246,7 +306,7 @@ async function loadPublications() {
     const filtersEl = document.getElementById('site-filters');
     if (filtersEl) {
       filtersEl.innerHTML = renderPubFilters();
-      initFilters();
+      // Init filters is called below after everything is rendered
     }
 
     // Render timeline for publications page
@@ -255,6 +315,8 @@ async function loadPublications() {
       listEl.innerHTML = renderTimeline(publications, highlightAuthor);
       // Initialize scroll animations after rendering
       setTimeout(initScrollAnimations, 100);
+      // Initialize filters AFTER rendering items
+      initFilters();
     }
 
     // Render featured publications (for homepage - simple cards, no timeline)
