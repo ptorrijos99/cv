@@ -795,3 +795,10 @@ a:hover {
 .hidden-item {
     display: none !important;
 }
+
+/* Ensure children of hidden items are also hidden */
+.hidden-item *,
+.hidden-item::before,
+.hidden-item::after {
+    display: none !important;
+}
