@@ -214,8 +214,10 @@ function initFilters() {
       const category = item.dataset.category;
       if (filter === 'all' || category === filter) {
         item.classList.remove('hidden-item');
+        item.style.display = '';  // Reset to default
       } else {
         item.classList.add('hidden-item');
+        item.style.display = 'none';  // Force hide with inline style
       }
     });
 
@@ -231,8 +233,10 @@ function initFilters() {
 
       if (hasVisibleItems) {
         marker.classList.remove('hidden-item');
+        marker.style.display = '';  // Reset to default
       } else {
         marker.classList.add('hidden-item');
+        marker.style.display = 'none';  // Force hide with inline style
       }
     });
 
