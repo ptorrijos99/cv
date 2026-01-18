@@ -311,6 +311,115 @@ a:hover {
     gap: var(--space-sm);
 }
 
+/* Timeline Layout */
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--primary), var(--primary-light), var(--border));
+}
+
+/* Year Markers */
+.timeline-year-marker {
+    position: relative;
+    margin: var(--space-xl) 0 var(--space-md);
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.5s ease;
+}
+
+.timeline-year-marker:first-child {
+    margin-top: 0;
+}
+
+.timeline-year-marker.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.timeline-year-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: var(--text-inverse);
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: 8px 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(179, 0, 51, 0.3);
+    position: relative;
+    left: -8px;
+}
+
+/* Timeline Items */
+.timeline-item {
+    position: relative;
+    margin-bottom: var(--space-md);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+    transition-delay: var(--delay, 0s);
+}
+
+.timeline-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.timeline-dot {
+    position: absolute;
+    left: -26px;
+    top: 20px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 3px solid var(--primary);
+    transition: all 0.3s ease;
+    z-index: 1;
+}
+
+.timeline-item:hover .timeline-dot {
+    background: var(--primary);
+    transform: scale(1.2);
+    box-shadow: 0 0 10px rgba(179, 0, 51, 0.5);
+}
+
+/* Type-specific dot colors */
+.timeline-item[data-category="journal"] .timeline-dot {
+    border-color: var(--color-journal);
+}
+
+.timeline-item[data-category="journal"]:hover .timeline-dot {
+    background: var(--color-journal);
+    box-shadow: 0 0 10px rgba(179, 0, 51, 0.5);
+}
+
+.timeline-item[data-category="conference"] .timeline-dot {
+    border-color: var(--color-conference);
+}
+
+.timeline-item[data-category="conference"]:hover .timeline-dot {
+    background: var(--color-conference);
+    box-shadow: 0 0 10px rgba(217, 119, 6, 0.5);
+}
+
+.timeline-item[data-category="national"] .timeline-dot {
+    border-color: var(--color-national);
+}
+
+.timeline-item[data-category="national"]:hover .timeline-dot {
+    background: var(--color-national);
+    box-shadow: 0 0 10px rgba(100, 116, 139, 0.5);
+}
+
 .pub-card {
     display: grid;
     grid-template-columns: 4px 1fr;

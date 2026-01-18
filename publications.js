@@ -1,5 +1,5 @@
 // ========================================
-// Publications Renderer
+// Publications Renderer - Timeline Style
 // ========================================
 
 // Type order for sorting within year
@@ -21,9 +21,9 @@ function copyToClipboard(text, button) {
 }
 
 /**
- * Render a single publication card
+ * Render a single publication card for timeline
  */
-function renderPublicationCard(pub, highlightAuthor) {
+function renderPublicationCard(pub, highlightAuthor, index) {
   const typeClass = pub.type || 'conference';
 
   // Format authors with highlighting
@@ -36,7 +36,7 @@ function renderPublicationCard(pub, highlightAuthor) {
     })
     .join('; ');
 
-  // Clean title (remove leading { if present)
+  // Clean title
   const title = pub.title.replace(/^\{+/, '').replace(/\}+$/, '');
 
   // Clean venue
@@ -70,57 +70,84 @@ function renderPublicationCard(pub, highlightAuthor) {
   const ranking = pub.ranking ? `<span class="pub-rank">${pub.ranking}</span>` : '';
 
   return `
-    <article class="pub-card" data-category="${typeClass}" data-year="${pub.year}">
-      <div class="pub-stripe"></div>
-      <div class="pub-content">
-        <div class="pub-header">
-          <span class="pub-venue">${venue}</span>
-          <span class="pub-year">${pub.year}</span>
-          ${ranking}
+    <article class="timeline-item" data-category="${typeClass}" data-year="${pub.year}" style="--delay: ${(index % 5) * 0.1}s">
+      <div class="timeline-dot"></div>
+      <div class="pub-card">
+        <div class="pub-stripe"></div>
+        <div class="pub-content">
+          <div class="pub-header">
+            <span class="pub-venue">${venue}</span>
+            <span class="pub-year">${pub.year}</span>
+            ${ranking}
+          </div>
+          <h3 class="pub-title">${title}</h3>
+          <p class="pub-authors">${authors}</p>
+          <div class="pub-links">${links}</div>
         </div>
-        <h3 class="pub-title">${title}</h3>
-        <p class="pub-authors">${authors}</p>
-        <div class="pub-links">${links}</div>
       </div>
     </article>
   `;
 }
 
 /**
- * Render year separator
+ * Render year marker for timeline
  */
-function renderYearDivider(year) {
+function renderYearMarker(year) {
   return `
-    <div class="year-divider">
-      <span class="year-divider-line"></span>
-      <span class="year-divider-text">${year}</span>
-      <span class="year-divider-line"></span>
+    <div class="timeline-year-marker">
+      <div class="timeline-year-badge">${year}</div>
     </div>
   `;
 }
 
 /**
- * Render publications grouped by year
+ * Render publications as timeline grouped by year
  */
-function renderPublicationsWithYears(publications, highlightAuthor) {
+function renderTimeline(publications, highlightAuthor) {
   // Sort by year (desc), then by type order
   const sorted = [...publications].sort((a, b) => {
     if (b.year !== a.year) return b.year - a.year;
-    return (TYPE_ORDER[a.type] || 1) - (TYPE_ORDER[b.type] || 1);
+    const typeA = TYPE_ORDER[a.type] !== undefined ? TYPE_ORDER[a.type] : 1;
+    const typeB = TYPE_ORDER[b.type] !== undefined ? TYPE_ORDER[b.type] : 1;
+    return typeA - typeB;
   });
 
-  let html = '';
+  let html = '<div class="timeline">';
   let currentYear = null;
+  let itemIndex = 0;
 
   for (const pub of sorted) {
     if (pub.year !== currentYear) {
       currentYear = pub.year;
-      html += renderYearDivider(currentYear);
+      html += renderYearMarker(currentYear);
+      itemIndex = 0;
     }
-    html += renderPublicationCard(pub, highlightAuthor);
+    html += renderPublicationCard(pub, highlightAuthor, itemIndex);
+    itemIndex++;
   }
 
+  html += '</div>';
   return html;
+}
+
+/**
+ * Initialize scroll animations
+ */
+function initScrollAnimations() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  });
+
+  document.querySelectorAll('.timeline-item, .timeline-year-marker').forEach(el => {
+    observer.observe(el);
+  });
 }
 
 /**
@@ -179,26 +206,27 @@ async function loadPublications() {
     const filtersEl = document.getElementById('site-filters');
     if (filtersEl) {
       filtersEl.innerHTML = renderPubFilters();
-      // Re-initialize filter buttons
       initFilters();
     }
 
-    // Render all publications with year dividers
+    // Render timeline for publications page
     const listEl = document.getElementById('publications-list');
     if (listEl) {
-      listEl.innerHTML = renderPublicationsWithYears(publications, highlightAuthor);
+      listEl.innerHTML = renderTimeline(publications, highlightAuthor);
+      // Initialize scroll animations after rendering
+      setTimeout(initScrollAnimations, 100);
     }
 
-    // Render featured publications (for homepage - no year dividers)
+    // Render featured publications (for homepage - simple cards, no timeline)
     const featuredEl = document.getElementById('featured-publications');
     if (featuredEl) {
       const featured = publications.filter(p => p.featured);
       featuredEl.innerHTML = featured
-        .map(pub => renderPublicationCard(pub, highlightAuthor))
+        .map((pub, i) => renderPublicationCard(pub, highlightAuthor, i))
         .join('');
     }
 
-    // Update config stats (for other uses)
+    // Update config stats
     if (CONFIG && CONFIG.stats) {
       CONFIG.stats = stats;
     }
