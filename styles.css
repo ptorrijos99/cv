@@ -806,3 +806,35 @@ a:hover {
 .hidden-item::after {
     display: none !important;
 }
+
+/* Specific rules for hidden timeline items - ensure dots and lines are hidden */
+.timeline-item.hidden-item {
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+.timeline-item.hidden-item .timeline-dot,
+.timeline-item.hidden-item .pub-card {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+.timeline-item.hidden-item::before {
+    content: none !important;
+    display: none !important;
+    height: 0 !important;
+}
+
+/* Ensure hidden year markers don't leave any visual artifacts */
+.timeline-year-marker.hidden-item {
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+.timeline-year-marker.hidden-item .timeline-year-badge {
+    display: none !important;
+}

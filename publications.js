@@ -170,7 +170,7 @@ function renderPubStats(stats) {
       </div>
       <div class="stat">
         <div class="stat-number">${stats.workshops}</div>
-        <div class="stat-label">Int. Workshops</div>
+        <div class="stat-label">${t('publications.stats.workshops')}</div>
       </div>
       <div class="stat">
         <div class="stat-number">${stats.national}</div>
@@ -186,7 +186,7 @@ function renderPubFilters() {
       <button class="pub-filter active" data-filter="all">${t('publications.filters.all')}</button>
       <button class="pub-filter" data-filter="journal">${t('publications.filters.journals')}</button>
       <button class="pub-filter" data-filter="conference">${t('publications.filters.conferences')}</button>
-      <button class="pub-filter" data-filter="workshop">Int. Workshops</button>
+      <button class="pub-filter" data-filter="workshop">${t('publications.filters.workshops')}</button>
       <button class="pub-filter" data-filter="national">${t('publications.filters.national')}</button>
     </div>
   `;

@@ -39,12 +39,14 @@ const I18N = {
             stats: {
                 journals: 'Journals',
                 conferences: 'Int. Conferences',
+                workshops: 'Int. Workshops',
                 national: 'National'
             },
             filters: {
                 all: 'All',
                 journals: 'Journals',
                 conferences: 'Conferences',
+                workshops: 'Workshops',
                 national: 'National'
             }
         },
@@ -96,12 +98,14 @@ const I18N = {
             stats: {
                 journals: 'Revistas',
                 conferences: 'Conferencias Int.',
+                workshops: 'Workshops Int.',
                 national: 'Nacionales'
             },
             filters: {
                 all: 'Todas',
                 journals: 'Revistas',
                 conferences: 'Conferencias',
+                workshops: 'Workshops',
                 national: 'Nacionales'
             }
         },
