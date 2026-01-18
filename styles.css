@@ -384,8 +384,8 @@ a:hover {
     position: absolute;
     left: -22px;
     top: 32px;
-    /* Only visible when connected to next */
-    height: calc(100% + var(--space-md) + 10px);
+    /* Connect to next item */
+    height: calc(100% + var(--space-md));
     width: 4px;
     border-radius: 2px;
     background: var(--color-journal);
@@ -394,8 +394,12 @@ a:hover {
     z-index: 0;
 }
 
-/* Hide connector when explicitly marked or last child */
-.timeline-item.no-connect-down::before,
+/* Last item before year marker: shorter line that ends cleanly */
+.timeline-item.no-connect-down::before {
+    height: 40px;
+}
+
+/* Absolute last child in timeline: hide the line */
 .timeline-item:last-child::before {
     display: none;
 }
