@@ -72,7 +72,7 @@ function renderPublicationCard(pub, highlightAuthor, index) {
   return `
     <article class="timeline-item" data-category="${typeClass}" data-year="${pub.year}" style="--delay: ${(index % 5) * 0.1}s">
       <div class="timeline-dot"></div>
-      <div class="pub-card">
+      <div class="pub-card" data-category="${typeClass}">
         <div class="pub-stripe"></div>
         <div class="pub-content">
           <div class="pub-header">
@@ -84,6 +84,51 @@ function renderPublicationCard(pub, highlightAuthor, index) {
           <p class="pub-authors">${authors}</p>
           <div class="pub-links">${links}</div>
         </div>
+      </div>
+    </article>
+  `;
+}
+
+/**
+ * Render simple publication card (for homepage featured, no timeline wrapper)
+ */
+function renderSimpleCard(pub, highlightAuthor) {
+  const typeClass = pub.type || 'conference';
+
+  const authors = pub.authors
+    .map(author => {
+      if (author.includes(highlightAuthor.split(',')[0])) {
+        return `<strong>${author}</strong>`;
+      }
+      return author;
+    })
+    .join('; ');
+
+  const title = pub.title.replace(/^\{+/, '').replace(/\}+$/, '');
+  const venue = (pub.venue || '').replace(/^\{+/, '').replace(/\}+$/, '');
+
+  let links = '';
+  if (pub.doi) {
+    links += `<a href="https://doi.org/${pub.doi}" target="_blank" rel="noopener" class="pub-link">DOI</a>`;
+  }
+  if (pub.arxiv) {
+    links += `<a href="https://arxiv.org/abs/${pub.arxiv}" target="_blank" rel="noopener" class="pub-link pub-link-arxiv">arXiv</a>`;
+  }
+
+  const ranking = pub.ranking ? `<span class="pub-rank">${pub.ranking}</span>` : '';
+
+  return `
+    <article class="pub-card" data-category="${typeClass}">
+      <div class="pub-stripe"></div>
+      <div class="pub-content">
+        <div class="pub-header">
+          <span class="pub-venue">${venue}</span>
+          <span class="pub-year">${pub.year}</span>
+          ${ranking}
+        </div>
+        <h3 class="pub-title">${title}</h3>
+        <p class="pub-authors">${authors}</p>
+        <div class="pub-links">${links}</div>
       </div>
     </article>
   `;
@@ -222,7 +267,7 @@ async function loadPublications() {
     if (featuredEl) {
       const featured = publications.filter(p => p.featured);
       featuredEl.innerHTML = featured
-        .map((pub, i) => renderPublicationCard(pub, highlightAuthor, i))
+        .map((pub) => renderSimpleCard(pub, highlightAuthor))
         .join('');
     }
 

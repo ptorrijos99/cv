@@ -317,16 +317,6 @@ a:hover {
     padding-left: 30px;
 }
 
-.timeline::before {
-    content: '';
-    position: absolute;
-    left: 6px;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: linear-gradient(to bottom, var(--primary), var(--primary-light), var(--border));
-}
-
 /* Year Markers */
 .timeline-year-marker {
     position: relative;
@@ -383,7 +373,37 @@ a:hover {
     background: var(--surface);
     border: 3px solid var(--primary);
     transition: all 0.3s ease;
-    z-index: 1;
+    z-index: 2;
+}
+
+/* Colored line segment for each item */
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -21px;
+    top: 32px;
+    bottom: -16px;
+    width: 4px;
+    border-radius: 2px;
+    background: var(--color-journal);
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+}
+
+.timeline-item:last-child::before {
+    display: none;
+}
+
+.timeline-item:hover::before {
+    opacity: 1;
+}
+
+.timeline-item[data-category="conference"]::before {
+    background: var(--color-conference);
+}
+
+.timeline-item[data-category="national"]::before {
+    background: var(--color-national);
 }
 
 .timeline-item:hover .timeline-dot {
