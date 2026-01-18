@@ -31,60 +31,8 @@
         <section class="section">
             <h2 class="section-title" id="featured-title"></h2>
 
-            <div class="pub-list" id="featured-publications">
-                <!-- Machine Learning 2026 -->
-                <article class="pub-card" data-category="journal">
-                    <div class="pub-stripe"></div>
-                    <div class="pub-content">
-                        <div class="pub-header">
-                            <span class="pub-venue">Machine Learning</span>
-                            <span class="pub-year">2026</span>
-                            <span class="pub-rank">Q2</span>
-                        </div>
-                        <h3 class="pub-title">FedGES: A Federated Learning Approach for Bayesian Network Structure
-                            Learning</h3>
-                        <p class="pub-authors"><strong>Torrijos, Pablo</strong>; Puerta, José M.; Gámez, José A.</p>
-                        <a href="https://doi.org/10.1007/s10994-025-06939-2" target="_blank" rel="noopener"
-                            class="pub-link">DOI</a>
-                    </div>
-                </article>
-
-                <!-- GECCO 2025 -->
-                <article class="pub-card" data-category="conference">
-                    <div class="pub-stripe"></div>
-                    <div class="pub-content">
-                        <div class="pub-header">
-                            <span class="pub-venue">GECCO '25</span>
-                            <span class="pub-year">2025</span>
-                            <span class="pub-rank">CORE A</span>
-                        </div>
-                        <h3 class="pub-title">Genetic Algorithms for Tractable Bayesian Network Fusion via Pre-Fusion
-                            Edge Pruning</h3>
-                        <p class="pub-authors"><strong>Torrijos, Pablo</strong>; Gámez, José A.; Puerta, José M.; Aledo,
-                            Juan A.</p>
-                        <a href="https://doi.org/10.1145/3712256.3726333" target="_blank" rel="noopener"
-                            class="pub-link">DOI</a>
-                    </div>
-                </article>
-
-                <!-- KBS 2024 -->
-                <article class="pub-card" data-category="journal">
-                    <div class="pub-stripe"></div>
-                    <div class="pub-content">
-                        <div class="pub-header">
-                            <span class="pub-venue">Knowledge-Based Systems</span>
-                            <span class="pub-year">2024</span>
-                            <span class="pub-rank">Q1</span>
-                        </div>
-                        <h3 class="pub-title">Parallel structural learning of Bayesian networks: Iterative divide and
-                            conquer algorithm based on structural fusion</h3>
-                        <p class="pub-authors">Laborda, Jorge D.; <strong>Torrijos, Pablo</strong>; Puerta, José M.;
-                            Gámez, José A.</p>
-                        <a href="https://doi.org/10.1016/j.knosys.2024.111840" target="_blank" rel="noopener"
-                            class="pub-link">DOI</a>
-                    </div>
-                </article>
-            </div>
+            <!-- Featured publications loaded dynamically from publications.json -->
+            <div class="pub-list" id="featured-publications"></div>
 
             <p class="view-all-link" id="view-all-link"></p>
         </section>
@@ -97,6 +45,7 @@
     <script src="config.js"></script>
     <script src="i18n.js"></script>
     <script src="components.js"></script>
+    <script src="publications.js"></script>
     <script src="script.js"></script>
     <script>
         // Page-specific initialization
@@ -121,6 +70,9 @@
             if (viewAllLink) {
                 viewAllLink.innerHTML = `<a href="publications.html">${t('home.viewAll')}</a>`;
             }
+
+            // Load featured publications from JSON
+            loadPublications();
         });
     </script>
 </body>

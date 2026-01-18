@@ -9,7 +9,7 @@ const CONFIG = {
     // Personal information
     profile: {
         name: 'Pablo Torrijos Arenas',
-        photo: 'photo.jpg',
+        photo: 'img/photo.jpg',
         email: 'pablo.torrijos@uclm.es',
         links: {
             scholar: 'https://scholar.google.com/citations?user=gpG5iKgAAAAJ',
@@ -17,6 +17,13 @@ const CONFIG = {
             scopus: 'https://www.scopus.com/authid/detail.uri?authorId=58455058100',
             github: 'https://github.com/ptorrijos99',
         }
+    },
+
+    // Logos
+    logos: {
+        uclm: 'img/uclm.png',
+        simd_en: 'img/simd_eng.png',
+        simd_es: 'img/simd_esp.png'
     },
 
     // Theme colors (CSS variables)

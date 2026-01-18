@@ -13,7 +13,7 @@ const I18N = {
         // Header
         header: {
             role: 'Predoctoral Researcher',
-            affiliation: 'SIMD Group · I3A Institute',
+            affiliation: 'Research Group: <a href="https://simd.i3a.uclm.es/" target="_blank" rel="noopener">Intelligent Systems and Data Mining (SIMD)</a>',
             university: 'University of Castilla-La Mancha',
             email: 'Email',
             scholar: 'Scholar',
@@ -70,7 +70,7 @@ const I18N = {
         // Header
         header: {
             role: 'Investigador Predoctoral',
-            affiliation: 'Grupo SIMD · Instituto I3A',
+            affiliation: 'Grupo de Investigación: <a href="https://simd.i3a.uclm.es/" target="_blank" rel="noopener">Sistemas Inteligentes y Minería de Datos (SIMD)</a>',
             university: 'Universidad de Castilla-La Mancha',
             email: 'Email',
             scholar: 'Scholar',
