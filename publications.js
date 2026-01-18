@@ -129,7 +129,7 @@ function formatAuthors(authorsList, highlightAuthor) {
  */
 function renderYearMarker(year) {
   return `
-    <div class="timeline-year-marker">
+    <div class="timeline-year-marker" data-year="${year}">
       <div class="timeline-year-badge">${year}</div>
     </div>
   `;
@@ -227,96 +227,101 @@ function renderPubFilters() {
 }
 
 /**
- * Initialize filter functionality
+ * Initialize filter functionality - SIMPLIFIED VERSION
  */
 function initFilters() {
+  console.log('initFilters called');
+
   const buttons = document.querySelectorAll('.pub-filter');
-  const items = document.querySelectorAll('.timeline-item');
-  const itemsArray = Array.from(items);
+  console.log('Found filter buttons:', buttons.length);
 
-  // Define the filter logic as a reusable function
-  function applyFilter(filter) {
-    // 1. Filter items
-    itemsArray.forEach(item => {
-      const category = (item.dataset.category || '').trim();
-      const matches = filter === 'all' || category === filter;
-
-      if (matches) {
-        item.classList.remove('hidden-item');
-        setTimeout(() => item.classList.add('visible'), 10);
-      } else {
-        item.classList.add('hidden-item');
-        item.classList.remove('visible');
-      }
-    });
-
-    // 2. Update year markers visibility
-    document.querySelectorAll('.timeline-year-marker').forEach(marker => {
-      const yearBadge = marker.querySelector('.timeline-year-badge');
-      if (!yearBadge) return;
-
-      const yearText = yearBadge.textContent.trim();
-      let hasVisibleItems = false;
-
-      for (const item of itemsArray) {
-        const itemYear = (item.dataset.year || '').trim();
-        if (!item.classList.contains('hidden-item') && itemYear === yearText) {
-          hasVisibleItems = true;
-          break;
-        }
-      }
-
-      if (hasVisibleItems) {
-        marker.classList.remove('hidden-item');
-        setTimeout(() => marker.classList.add('visible'), 10);
-      } else {
-        marker.classList.add('hidden-item');
-        marker.classList.remove('visible');
-      }
-    });
-
-    // 3. Update timeline connectors
-    const allElements = document.querySelectorAll('.timeline-item, .timeline-year-marker');
-    let lastVisibleItem = null;
-
-    // First, remove all no-connect-down classes
-    itemsArray.forEach(item => item.classList.remove('no-connect-down'));
-
-    allElements.forEach(el => {
-      if (el.classList.contains('hidden-item')) return;
-
-      if (el.classList.contains('timeline-item')) {
-        if (lastVisibleItem) {
-          lastVisibleItem.classList.remove('no-connect-down');
-        }
-        lastVisibleItem = el;
-      } else if (el.classList.contains('timeline-year-marker')) {
-        if (lastVisibleItem) {
-          lastVisibleItem.classList.add('no-connect-down');
-        }
-        lastVisibleItem = null;
-      }
-    });
-
-    if (lastVisibleItem) {
-      lastVisibleItem.classList.add('no-connect-down');
-    }
-  }
-
-  // Attach click handlers
   buttons.forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', function () {
+      const filter = this.dataset.filter;
+      console.log('Filter clicked:', filter);
+
+      // Remove active from all buttons
       buttons.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const filter = btn.dataset.filter;
-      applyFilter(filter);
+      this.classList.add('active');
+
+      // Get fresh lists each time
+      const allItems = document.querySelectorAll('.timeline-item');
+      const allMarkers = document.querySelectorAll('.timeline-year-marker');
+
+      console.log('Total items:', allItems.length);
+      console.log('Total markers:', allMarkers.length);
+
+      // Filter items
+      let visibleCount = 0;
+      allItems.forEach(item => {
+        const category = item.dataset.category;
+        if (filter === 'all' || category === filter) {
+          item.classList.remove('hidden-item');
+          visibleCount++;
+        } else {
+          item.classList.add('hidden-item');
+        }
+      });
+
+      console.log('Visible items after filter:', visibleCount);
+
+      // Filter year markers
+      allMarkers.forEach(marker => {
+        const year = marker.dataset.year;
+
+        // Check if any visible items have this year
+        let hasItems = false;
+        allItems.forEach(item => {
+          if (!item.classList.contains('hidden-item') && item.dataset.year === year) {
+            hasItems = true;
+          }
+        });
+
+        if (hasItems) {
+          marker.classList.remove('hidden-item');
+        } else {
+          marker.classList.add('hidden-item');
+          console.log('Hiding year marker:', year);
+        }
+      });
+
+      // Update connectors
+      updateConnectors();
     });
   });
+}
 
-  // Manually trigger initial "all" filter after a delay to ensure DOM is ready
-  setTimeout(() => {
-    applyFilter('all');
-  }, 150);
+/**
+ * Update timeline connectors
+ */
+function updateConnectors() {
+  const allItems = document.querySelectorAll('.timeline-item');
+  const allMarkers = document.querySelectorAll('.timeline-year-marker');
+  const allElements = [...allMarkers, ...allItems].sort((a, b) => {
+    return a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
+  });
+
+  // Remove all connector classes first
+  allItems.forEach(item => item.classList.remove('no-connect-down'));
+
+  let lastVisibleItem = null;
+
+  allElements.forEach(el => {
+    if (el.classList.contains('hidden-item')) return;
+
+    if (el.classList.contains('timeline-item')) {
+      lastVisibleItem = el;
+    } else if (el.classList.contains('timeline-year-marker')) {
+      if (lastVisibleItem) {
+        lastVisibleItem.classList.add('no-connect-down');
+      }
+      lastVisibleItem = null;
+    }
+  });
+
+  if (lastVisibleItem) {
+    lastVisibleItem.classList.add('no-connect-down');
+  }
 }
 
 /**
@@ -339,17 +344,19 @@ async function loadPublications() {
     const filtersEl = document.getElementById('site-filters');
     if (filtersEl) {
       filtersEl.innerHTML = renderPubFilters();
-      // Init filters is called below after everything is rendered
     }
 
     // Render timeline for publications page
     const listEl = document.getElementById('publications-list');
     if (listEl) {
       listEl.innerHTML = renderTimeline(publications, highlightAuthor);
-      // Initialize scroll animations after rendering
-      setTimeout(initScrollAnimations, 100);
-      // Initialize filters AFTER rendering items
-      initFilters();
+
+      // Initialize scroll animations
+      setTimeout(() => {
+        initScrollAnimations();
+        // Initialize filters AFTER animations
+        initFilters();
+      }, 100);
     }
 
     // Render featured publications (for homepage - simple cards, no timeline)
