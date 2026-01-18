@@ -384,7 +384,7 @@ a:hover {
     position: absolute;
     left: -22px;
     top: 32px;
-    /* Ensure it connects by extending well past the bottom margin */
+    /* Only visible when connected to next */
     height: calc(100% + var(--space-md) + 10px);
     width: 4px;
     border-radius: 2px;
@@ -392,10 +392,15 @@ a:hover {
     opacity: 0.6;
     transition: opacity 0.3s ease;
     z-index: 0;
+    display: none;
+    /* Hidden by default, JS enables it */
 }
 
-/* Hide line for element before a year marker if we want strict separation, 
-   but usually we want flow. Hiding for last child is key. */
+.timeline-item.connect-down::before {
+    display: block;
+}
+
+/* Ensure last child never shows it (failsafe) */
 .timeline-item:last-child::before {
     display: none;
 }

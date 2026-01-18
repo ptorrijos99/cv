@@ -245,32 +245,31 @@ function initFilters() {
 
       const filter = btn.dataset.filter;
 
-      // Filter items
+      // 1. Filter items
       itemsArray.forEach(item => {
         const category = (item.dataset.category || '').trim();
         const matches = filter === 'all' || category === filter;
 
         if (matches) {
           item.style.display = '';
-          // Re-trigger animation if needed
           setTimeout(() => item.classList.add('visible'), 10);
         } else {
           item.style.display = 'none';
+          item.classList.remove('visible'); // Ensure it fades out or resets
         }
       });
 
-      // Update year markers visibility
+      // 2. Update year markers visibility
       document.querySelectorAll('.timeline-year-marker').forEach(marker => {
         const yearBadge = marker.querySelector('.timeline-year-badge');
         if (!yearBadge) return;
 
         const yearText = yearBadge.textContent.trim();
+        let hasVisibleItems = false;
 
         // Find if there are visible items for this year
-        let hasVisibleItems = false;
         for (const item of itemsArray) {
           const itemYear = (item.dataset.year || '').trim();
-          // Check if item is displayed AND belongs to this year
           if (item.style.display !== 'none' && itemYear === yearText) {
             hasVisibleItems = true;
             break;
@@ -285,8 +284,36 @@ function initFilters() {
         }
       });
 
+      // 3. Update timeline connectors (connect-down)
+      // Iterate through ALL visible flow elements (markers and items)
+      const allElements = document.querySelectorAll('.timeline-item, .timeline-year-marker');
+      let lastVisibleItem = null;
+
+      allElements.forEach(el => {
+        // Skip hidden elements
+        if (el.style.display === 'none') return;
+
+        if (el.classList.contains('timeline-item')) {
+          // If we had a previous item, it connects to this one
+          if (lastVisibleItem) {
+            lastVisibleItem.classList.add('connect-down');
+          }
+          // This item is now the candidate, but doesn't connect yet
+          el.classList.remove('connect-down');
+          lastVisibleItem = el;
+        } else if (el.classList.contains('timeline-year-marker')) {
+          // A marker breaks the chain. Previous item stops here.
+          lastVisibleItem = null;
+        }
+      });
+      // The very last visible item of the loop correctly remains without connect-down
+
     });
   });
+
+  // Trigger default filter (all) to set initial state correctly
+  const activeBtn = document.querySelector('.pub-filter.active');
+  if (activeBtn) activeBtn.click();
 }
 
 /**
