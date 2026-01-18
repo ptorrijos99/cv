@@ -383,8 +383,8 @@ a:hover {
     position: absolute;
     left: -21px;
     top: 32px;
-    /* This connects to the next item */
-    height: calc(100% + var(--space-md));
+    /* Connect to the next item by extending past the bottom */
+    bottom: calc(-1 * var(--space-md));
     width: 4px;
     border-radius: 2px;
     background: var(--color-journal);
@@ -562,7 +562,6 @@ a:hover {
     font-weight: 600;
 }
 
-/* Shared pub-link styles handled above block 435 in previous edit */
 /* Year Dividers */
 .year-divider {
     display: flex;
@@ -589,6 +588,34 @@ a:hover {
     padding: 0 var(--space-sm);
 }
 
+/* Shared Pub Link Styles */
+.pub-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-top: var(--space-sm);
+}
+
+.pub-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--primary);
+    padding: 4px 8px;
+    background: var(--surface-alt);
+    /* Light gray background for buttons */
+    border-radius: var(--radius);
+    transition: background var(--transition);
+    text-decoration: none;
+}
+
+.pub-link:hover {
+    background: var(--border);
+    color: var(--primary-dark);
+}
+
 /* Publication Link Groups */
 .pub-link-group {
     display: inline-flex;
@@ -596,7 +623,7 @@ a:hover {
     border-radius: var(--radius);
     overflow: hidden;
     border: 1px solid transparent;
-    transition: border-color var(--transition);
+    /* Keep border logic */
 }
 
 .pub-link-group:hover {
@@ -609,13 +636,14 @@ a:hover {
     margin: 0;
 }
 
+/* Ensure copy button matches height/style */
 .pub-copy {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     border: none;
-    background: transparent;
-    background-color: rgba(0, 0, 0, 0.03);
+    background: var(--surface-alt);
+    /* Match link bg */
     padding: 4px 8px;
     cursor: pointer;
     border-left: 1px solid rgba(0, 0, 0, 0.05);
@@ -626,7 +654,7 @@ a:hover {
 }
 
 .pub-copy:hover {
-    background-color: rgba(0, 0, 0, 0.08);
+    background: var(--border);
     color: var(--text);
 }
 

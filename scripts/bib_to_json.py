@@ -10,146 +10,142 @@ from pathlib import Path
 
 
 def parse_bib_file(bib_path: str) -> list[dict]:
-    """Parse a BibTeX file and extract publication entries."""
-    # Simple custom parser to handle nested braces content correctly
+    """Parse a BibTeX file and extract publication entries manually."""
     with open(bib_path, 'r', encoding='utf-8') as f:
         content = f.read()
 
     publications = []
     
-    # 1. Split into entries by @
-    # This is a basic split, assumes "@" marks start of entry
-    raw_entries = re.split(r'@(\w+)\s*\{', content)
+    # Simple state machine parser
+    i = 0
+    n = len(content)
     
-    # raw_entries[0] is pre-content, then we have pairs: type, content
-    for i in range(1, len(raw_entries), 2):
-        entry_type = raw_entries[i].lower()
-        entry_body = raw_entries[i+1]
-        
-        if entry_type == 'comment':
-            continue
+    while i < n:
+        if content[i] == '@':
+            # Start of entry
+            i += 1
+            type_start = i
+            while i < n and content[i].isalpha():
+                i += 1
+            entry_type = content[type_start:i].lower()
             
-        # Extract key: up to first comma
-        key_match = re.match(r'([^,]+),', entry_body)
-        if not key_match:
-            continue
-        key = key_match.group(1).strip()
-        
-        # Parse fields
-        fields = {}
-        # Cursor position after key
-        cursor = key_match.end()
-        
-        while cursor < len(entry_body):
-            # Find field name
-            name_match = re.search(r'(\w+)\s*=', entry_body[cursor:])
-            if not name_match:
-                break
-            
-            field_name = name_match.group(1).lower()
-            start_val = cursor + name_match.end()
-            
-            # Find value (handling nested braces)
-            # Find first opening brace or quote
-            val_start_match = re.search(r'[\{"]', entry_body[start_val:])
-            if not val_start_match:
-                break
+            if entry_type == 'comment':
+                while i < n and content[i] != '@': i += 1
+                continue
                 
-            token_start = start_val + val_start_match.start()
-            delimiter = entry_body[token_start]
+            # Skip spaces to {
+            while i < n and content[i] != '{': i += 1
+            if i >= n: break
+            i += 1 # Skip {
             
-            val_end = -1
-            if delimiter == '{':
-                brace_count = 1
-                for j in range(token_start + 1, len(entry_body)):
-                    if entry_body[j] == '{':
-                        brace_count += 1
-                    elif entry_body[j] == '}':
-                        brace_count -= 1
-                        if brace_count == 0:
-                            val_end = j
+            # Read Key
+            key_start = i
+            while i < n and content[i] != ',': i += 1
+            key = content[key_start:i].strip()
+            i += 1 # Skip ,
+            
+            # Read Fields
+            fields = {}
+            brace_balance = 1 # We are inside the entry brace
+            
+            while i < n and brace_balance > 0:
+                # Skip whitespace
+                while i < n and content[i].isspace(): i += 1
+                
+                # Check for end of entry
+                if content[i] == '}':
+                    brace_balance -= 1
+                    i += 1
+                    continue
+                
+                # Read Field Name
+                name_start = i
+                while i < n and (content[i].isalnum() or content[i] in '-_'): i += 1
+                field_name = content[name_start:i].lower().strip()
+                
+                # Skip to =
+                while i < n and content[i] != '=': i += 1
+                i += 1 # Skip =
+                
+                # Skip whitespace
+                while i < n and content[i].isspace(): i += 1
+                
+                # Read Field Value
+                val_start = i
+                val_end = i
+                
+                if content[i] == '{':
+                    # Braced string
+                    val_brace_balance = 0
+                    start_brace = i
+                    while i < n:
+                        if content[i] == '{': val_brace_balance += 1
+                        elif content[i] == '}': val_brace_balance -= 1
+                        i += 1
+                        if val_brace_balance == 0:
+                            val_end = i
+                            # Strip outer braces locally for clean value
+                            fields[field_name] = content[start_brace+1:i-1]
                             break
-            else: # quote
-                 # This simple parser doesn't handle escaped quotes inside quotes perfectly but works for standard bib
-                 quote_end = entry_body.find('"', token_start + 1)
-                 if quote_end != -1:
-                     val_end = quote_end
+                elif content[i] == '"':
+                    # Quoted string
+                    i += 1
+                    while i < n:
+                        if content[i] == '"' and content[i-1] != '\\':
+                             i += 1
+                             val_end = i
+                             fields[field_name] = content[val_start+1:i-1]
+                             break
+                        i += 1
+                else:
+                    # Number or unquoted string
+                    while i < n and content[i] not in ',}': i += 1
+                    val_end = i
+                    fields[field_name] = content[val_start:val_end].strip()
+
+                # Skip comma if present
+                while i < n and content[i].isspace(): i += 1
+                if i < n and content[i] == ',': i += 1
             
-            if val_end != -1:
-                fields[field_name] = entry_body[token_start+1:val_end]
-                cursor = val_end + 1
-            else:
-                break
-        
-        # Build publication object
-        pub = {
-            'id': key,
-            # Default type mapping
-            'type': 'journal' if entry_type == 'article' else 'conference',
-        }
-        
-        # Normalize fields
-        for field_name, field_value in fields.items():
-            # Clean LaTeX formatting
-            # First, handle double braces {{Title}} -> Title
-            cleaned = field_value
-            if cleaned.startswith('{') and cleaned.endswith('}'):
-                cleaned = cleaned[1:-1]
+            # Process Entry
+            pub = {
+                'id': key,
+                'type': 'journal' if entry_type == 'article' else 'conference'
+            }
             
-            # Remove remaining external braces if they wrap the whole content
-            if cleaned.startswith('{') and cleaned.endswith('}'):
-                 # Check if they are matching outer braces
-                 brace_balance = 0
-                 is_wrapped = True
-                 for i, char in enumerate(cleaned[:-1]):
-                     if char == '{': brace_balance += 1
-                     elif char == '}': brace_balance -= 1
-                     if brace_balance == 0:
-                         is_wrapped = False
-                         break
-                 if is_wrapped:
+            for f_name, f_val in fields.items():
+                # Clean value
+                cleaned = f_val
+                # Handle double braces {{Title}} -> Title
+                while cleaned.startswith('{') and cleaned.endswith('}'):
                      cleaned = cleaned[1:-1]
+                
+                # Latex replacements
+                cleaned = cleaned.replace("\\&", "&")
+                cleaned = cleaned.replace("\\'a", "á").replace("\\'e", "é").replace("\\'i", "í").replace("\\'o", "ó").replace("\\'u", "ú").replace("\\~n", "ñ")
+                cleaned = cleaned.replace("\\'A", "Á").replace("\\'E", "É").replace("\\'I", "Í").replace("\\'O", "Ó").replace("\\'U", "Ú").replace("\\~N", "Ñ")
+                cleaned = ' '.join(cleaned.split()) # Normalize spaces
+                
+                if f_name == 'title': pub['title'] = cleaned
+                elif f_name == 'journal': pub['venue'] = cleaned
+                elif f_name == 'venue': pub['venue'] = cleaned
+                elif f_name == 'booktitle': 
+                    if 'venue' not in pub: pub['venue'] = cleaned
+                elif f_name == 'year': pub['year'] = int(cleaned) if cleaned.isdigit() else cleaned
+                elif f_name == 'category': pub['type'] = cleaned
+                elif f_name == 'ranking': pub['ranking'] = cleaned
+                elif f_name == 'doi': pub['doi'] = cleaned
+                elif f_name == 'arxiv': pub['arxiv'] = cleaned
+                elif f_name == 'url': pub['url'] = cleaned
+                elif f_name == 'featured': pub['featured'] = (cleaned.lower() == 'true')
+                elif f_name == 'author': 
+                    pub['authors'] = [a.strip() for a in cleaned.split(' and ')]
 
-            # Replace escaped chars
-            cleaned = cleaned.replace("\\&", "&")
-            cleaned = cleaned.replace("\\'a", "á").replace("\\'e", "é").replace("\\'i", "í").replace("\\'o", "ó").replace("\\'u", "ú").replace("\\~n", "ñ")
-            cleaned = cleaned.replace("\\'A", "Á").replace("\\'E", "É").replace("\\'I", "Í").replace("\\'O", "Ó").replace("\\'U", "Ú").replace("\\~N", "Ñ")
+            publications.append(pub)
             
-            # Remove double spaces
-            cleaned = ' '.join(cleaned.split())
+        else:
+            i += 1
             
-            if field_name == 'author':
-                pub['authors'] = [a.strip() for a in cleaned.split(' and ')]
-            elif field_name == 'title':
-                # Remove any remaining wrapping braces that might be around words
-                pub['title'] = cleaned.replace('{', '').replace('}', '')
-            elif field_name == 'year':
-                try:
-                    pub['year'] = int(cleaned)
-                except ValueError:
-                    pub['year'] = cleaned
-            elif field_name == 'journal':
-                pub['venue'] = cleaned
-            elif field_name == 'booktitle':
-                if 'venue' not in pub:
-                    pub['venue'] = cleaned
-            elif field_name == 'venue':
-                pub['venue'] = cleaned
-            elif field_name == 'doi':
-                pub['doi'] = cleaned
-            elif field_name == 'url':
-                pub['url'] = cleaned
-            elif field_name == 'arxiv':
-                pub['arxiv'] = cleaned
-            elif field_name == 'category':
-                pub['type'] = cleaned
-            elif field_name == 'ranking':
-                pub['ranking'] = cleaned
-            elif field_name == 'featured':
-                pub['featured'] = cleaned.lower() == 'true'
-
-        publications.append(pub)
-    
     # Sort
     def sort_key(p):
         try:
