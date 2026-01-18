@@ -227,9 +227,6 @@ function renderPubFilters() {
 }
 
 /**
- * Load and render publications from JSON
- */
-/**
  * Initialize filter functionality
  */
 function initFilters() {
@@ -251,11 +248,13 @@ function initFilters() {
         const matches = filter === 'all' || category === filter;
 
         if (matches) {
-          item.style.display = '';
+          item.classList.remove('hidden-item');
+          item.style.display = ''; // Clear inline cleanup
+          // Re-trigger animation if needed
           setTimeout(() => item.classList.add('visible'), 10);
         } else {
-          item.style.display = 'none';
-          item.classList.remove('visible'); // Ensure it fades out or resets
+          item.classList.add('hidden-item');
+          item.classList.remove('visible');
         }
       });
 
@@ -270,28 +269,30 @@ function initFilters() {
         // Find if there are visible items for this year
         for (const item of itemsArray) {
           const itemYear = (item.dataset.year || '').trim();
-          if (item.style.display !== 'none' && itemYear === yearText) {
+          // Check if item is displayed AND belongs to this year
+          if (!item.classList.contains('hidden-item') && itemYear === yearText) {
             hasVisibleItems = true;
             break;
           }
         }
 
         if (hasVisibleItems) {
+          marker.classList.remove('hidden-item');
           marker.style.display = '';
           setTimeout(() => marker.classList.add('visible'), 10);
         } else {
-          marker.style.display = 'none';
+          marker.classList.add('hidden-item');
         }
       });
 
       // 3. Update timeline connectors (connect-down)
-      // Iterate through ALL visible flow elements (markers and items)
+      // Iterate through ALL flow elements (markers and items)
       const allElements = document.querySelectorAll('.timeline-item, .timeline-year-marker');
       let lastVisibleItem = null;
 
       allElements.forEach(el => {
         // Skip hidden elements
-        if (el.style.display === 'none') return;
+        if (el.classList.contains('hidden-item')) return;
 
         if (el.classList.contains('timeline-item')) {
           // If we had a previous item, it connects to this one
@@ -311,7 +312,7 @@ function initFilters() {
     });
   });
 
-  // Trigger default filter (all) to set initial state correctly
+  // Trigger default filter to set initial state correctly
   const activeBtn = document.querySelector('.pub-filter.active');
   if (activeBtn) activeBtn.click();
 }
