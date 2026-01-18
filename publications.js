@@ -28,7 +28,7 @@ function getPubLinks(pub) {
   if (pub.doi) {
     links += `
       <div class="pub-link-group">
-        <a href="https://doi.org/${pub.doi}" target="_blank" rel="noopener" class="pub-link">DOI</a>
+        <a href="https://doi.org/${pub.doi}" target="_blank" rel="noopener" class="pub-link">🔗 DOI</a>
         <button class="pub-copy" onclick="copyToClipboard('${pub.doi}', this)" title="Copy DOI">
           <span class="pub-copy-id">${pub.doi}</span>
         </button>
@@ -37,14 +37,14 @@ function getPubLinks(pub) {
   if (pub.arxiv) {
     links += `
       <div class="pub-link-group">
-        <a href="https://arxiv.org/abs/${pub.arxiv}" target="_blank" rel="noopener" class="pub-link pub-link-arxiv">arXiv</a>
+        <a href="https://arxiv.org/abs/${pub.arxiv}" target="_blank" rel="noopener" class="pub-link pub-link-arxiv">📄 arXiv</a>
         <button class="pub-copy pub-copy-arxiv" onclick="copyToClipboard('${pub.arxiv}', this)" title="Copy arXiv ID">
           <span class="pub-copy-id">${pub.arxiv}</span>
         </button>
       </div>`;
   }
   if (pub.url && !pub.doi) {
-    links += `<a href="${pub.url}" target="_blank" rel="noopener" class="pub-link">Link</a>`;
+    links += `<a href="${pub.url}" target="_blank" rel="noopener" class="pub-link">🔗 Link</a>`;
   }
   return links;
 }

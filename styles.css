@@ -667,18 +667,13 @@ a:hover {
 }
 
 .pub-copy-id {
-    display: none;
-}
-
-.pub-copy-arxiv {
-    color: #b31b1b;
-}
-
-.pub-copy-id {
-    max-width: 100px;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    max-width: none;
+    /* Show full ID as requested */
     white-space: nowrap;
+    vertical-align: middle;
+    margin-left: 2px;
+    font-size: 0.7rem;
+    color: var(--text-light);
 }
 
 /* ========================================
