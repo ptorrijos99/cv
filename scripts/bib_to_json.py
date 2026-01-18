@@ -114,11 +114,8 @@ def parse_bib_file(bib_path: str) -> list[dict]:
             }
             
             for f_name, f_val in fields.items():
-                # Clean value
-                cleaned = f_val
-                # Handle double braces {{Title}} -> Title
-                while cleaned.startswith('{') and cleaned.endswith('}'):
-                     cleaned = cleaned[1:-1]
+                # Clean value - Remove ALL braces
+                cleaned = re.sub(r'[{}]', '', f_val)
                 
                 # Latex replacements
                 cleaned = cleaned.replace("\\&", "&")
