@@ -67,19 +67,12 @@ function highlightBibtex(bibtex) {
       shouldSkip = true;
     }
 
-    // Also skip empty lines or trailing commas if previous line was skipped?
-    // A simple regex approach works better on the full string or line-by-line carefully.
-    // For now, simple line skipping is safe enough for standard formatted bibtex from our script.
-
     if (!shouldSkip) {
       filteredLines.push(line);
     }
   }
 
-  // Clean up trailing comma on the last field if the previous last field was removed
-  // This is tricky without a proper parser, but let's try a regex replace on the joined string.
   let cleanedBibtex = filteredLines.join('\n');
-  // Remove empty lines resulting from filtering that might look ugly
   cleanedBibtex = cleanedBibtex.replace(/^\s*[\r\n]/gm, '');
 
   // Syntax Highlighting
@@ -116,19 +109,17 @@ function getPubLinks(pub) {
     links += `<a href="${pub.url}" target="_blank" rel="noopener" class="pub-link">🔗 Link</a>`;
   }
 
-  // Add Action Buttons (Abstract / BibTeX) into the links area, aligned to the right or inline
+  // Add Action Buttons (Abstract / BibTeX) into the links area
 
   if (pub.abstract) {
     links += `<button class="pub-action-btn" onclick="toggleAbstract('${pub.id}')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-            Abstract
+            📝 Abstract
         </button>`;
   }
 
   if (pub.raw_bibtex) {
     links += `<button class="pub-action-btn" onclick="toggleBibtex('${pub.id}')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-            BibTeX
+            📜 BibTeX
         </button>`;
   }
 
@@ -144,10 +135,6 @@ function renderPublicationCard(pub, highlightAuthor, index) {
   const ranking = pub.ranking ? `<span class="pub-rank">${pub.ranking}</span>` : '';
 
   const highlightedBibtex = highlightBibtex(pub.raw_bibtex);
-
-  // We are putting the buttons INSIDE the links area now, so remove them from separate div
-  // But strictly speaking, the user said "pegado a la derecha del todo". 
-  // Flexbox on .pub-links with gap handles spacing nicely.
 
   return `
     <article class="timeline-item" data-category="${typeClass}" data-year="${pub.year}" style="--delay: ${(index % 5) * 0.1}s">
@@ -176,7 +163,6 @@ function renderPublicationCard(pub, highlightAuthor, index) {
                  <button class="pub-bibtex-copy-btn" onclick="copyBibtex('${pub.id}')">Copy</button>
                  <pre class="pub-bibtex-code" id="bibcode-${pub.id}">${highlightedBibtex}</pre>
                  <div style="display:none;" id="raw-bib-${pub.id}">${pub.raw_bibtex}</div> 
-                 <!-- Hidden div for copying raw unfiltered content if preferred, or copy innerText of code block -->
               </div>
             </div>
           ` : ''}
