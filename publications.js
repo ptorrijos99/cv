@@ -129,8 +129,30 @@ function getPubLinks(pub) {
 function parseLatex(text) {
   if (!text) return '';
 
-  return text
-    // Replace logic for common LaTeX commands
+  // Math and Special Symbols Mapping
+  const map = {
+    '\\theta': 'θ', '\\alpha': 'α', '\\beta': 'β', '\\gamma': 'γ',
+    '\\delta': 'δ', '\\epsilon': 'ε', '\\zeta': 'ζ', '\\eta': 'η',
+    '\\lambda': 'λ', '\\mu': 'μ', '\\sigma': 'σ', '\\tau': 'τ',
+    '\\phi': 'φ', '\\psi': 'ψ', '\\omega': 'ω',
+    '\\Delta': 'Δ', '\\Gamma': 'Γ', '\\Lambda': 'Λ', '\\Sigma': 'Σ',
+    '\\Phi': 'Φ', '\\Psi': 'Ψ', '\\Omega': 'Ω',
+    '\\geq': '≥', '\\leq': '≤', '\\neq': '≠', '\\approx': '≈',
+    '\\sim': '~', '\\times': '×', '\\rightarrow': '→', '\\leftarrow': '←',
+    '\\in': '∈', '\\infty': '∞'
+  };
+
+  let parsed = text;
+
+  // Replace symbols
+  for (const [key, value] of Object.entries(map)) {
+    // Escape the backslash for regex
+    const regex = new RegExp(key.replace(/\\/g, '\\\\'), 'g');
+    parsed = parsed.replace(regex, value);
+  }
+
+  return parsed
+    // Common LaTeX commands
     .replace(/\\textsc{([^}]+)}/g, '<span class="latex-sc">$1</span>')
     .replace(/{\\sf ([^}]+)}/g, '<span class="latex-sf">$1</span>')
     .replace(/\\textsf{([^}]+)}/g, '<span class="latex-sf">$1</span>')
