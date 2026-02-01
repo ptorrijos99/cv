@@ -9,6 +9,46 @@
     <meta name="author" content="Pablo Torrijos Arenas">
     <title>Pablo Torrijos Arenas | Researcher</title>
 
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="profile">
+    <meta property="og:title" content="Pablo Torrijos Arenas | Researcher">
+    <meta property="og:description"
+        content="Predoctoral Researcher in federated learning and Bayesian networks at University of Castilla-La Mancha.">
+    <meta property="og:image" content="img/photo.jpg">
+    <meta property="og:url" content="https://ptorrijos99.github.io/cv/">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Pablo Torrijos Arenas | Researcher">
+    <meta name="twitter:description" content="Predoctoral Researcher in federated learning and Bayesian networks.">
+    <meta name="twitter:image" content="img/photo.jpg">
+
+    <!-- Schema.org structure data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Pablo Torrijos Arenas",
+      "jobTitle": "Predoctoral Researcher",
+      "url": "https://ptorrijos99.github.io/cv/",
+      "image": "img/photo.jpg",
+      "sameAs": [
+        "https://scholar.google.com/citations?user=gpG5iKgAAAAJ",
+        "https://orcid.org/0000-0002-8395-3848",
+        "https://www.scopus.com/authid/detail.uri?authorId=58455058100",
+        "https://github.com/ptorrijos99"
+      ],
+      "affiliation": {
+        "@type": "Organization",
+        "name": "University of Castilla-La Mancha",
+        "department": {
+            "@type": "Organization",
+            "name": "Intelligent Systems and Data Mining (SIMD)"
+        }
+      }
+    }
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -18,28 +58,94 @@
 </head>
 
 <body>
-    <!-- Shared Components (injected by JavaScript) -->
-    <div id="site-header"></div>
-    <div id="site-nav"></div>
+    <!-- Shared Components (injected by JavaScript, but with static fallback for bots) -->
+    <div id="site-header">
+        <header class="header">
+            <!-- Language toggle placeholder -->
+            <button id="lang-toggle-fallback" class="lang-toggle" aria-label="Change language" style="display:none">
+                <span>EN</span>
+            </button>
+
+            <div class="header-content">
+                <img src="img/photo.jpg" alt="Pablo Torrijos Arenas" class="header-photo">
+
+                <div class="header-info">
+                    <h1>Pablo Torrijos Arenas</h1>
+                    <p class="header-role">Predoctoral Researcher</p>
+                    <p class="header-affiliation">
+                        Research Group: <a href="https://simd.i3a.uclm.es/" target="_blank" rel="noopener">Intelligent
+                            Systems and Data Mining (SIMD)</a><br>
+                        University of Castilla-La Mancha
+                    </p>
+                </div>
+
+                <div class="header-links">
+                    <a href="mailto:pablo.torrijos@uclm.es" class="header-link header-link-email">
+                        <!-- SVG icons will be loaded by JS, text fallback -->
+                        pablo.torrijos@uclm.es
+                    </a>
+                    <a href="https://scholar.google.com/citations?user=gpG5iKgAAAAJ" target="_blank" rel="noopener"
+                        class="header-link">Scholar</a>
+                    <a href="https://orcid.org/0000-0002-8395-3848" target="_blank" rel="noopener"
+                        class="header-link">ORCID</a>
+                    <a href="https://www.scopus.com/authid/detail.uri?authorId=58455058100" target="_blank"
+                        rel="noopener" class="header-link">Scopus</a>
+                    <a href="https://github.com/ptorrijos99" target="_blank" rel="noopener"
+                        class="header-link">GitHub</a>
+                </div>
+            </div>
+        </header>
+    </div>
+
+    <div id="site-nav">
+        <nav class="nav">
+            <div class="nav-content">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="publications.html" class="nav-link">Publications</a>
+            </div>
+        </nav>
+    </div>
 
     <!-- Main Content -->
     <main class="main">
         <!-- About Section -->
-        <section class="section" id="about-section"></section>
+        <section class="section" id="about-section">
+            <h2 class="section-title">About Me</h2>
+            <p class="about-text">
+                Predoctoral researcher in the <strong>Intelligent Systems and Data Mining (SIMD)</strong>
+                group at I3A Institute, with FPU21/01074 grant. My work focuses on <strong>federated learning</strong>
+                of probabilistic graphical models such as <strong>Bayesian networks</strong>, developing algorithms
+                that enable learning from distributed data while preserving privacy.
+            </p>
+        </section>
 
         <!-- Featured Publications -->
         <section class="section">
-            <h2 class="section-title" id="featured-title"></h2>
+            <h2 class="section-title" id="featured-title">Featured Publications</h2>
 
             <!-- Featured publications loaded dynamically from publications.json -->
             <div class="pub-list" id="featured-publications"></div>
 
-            <p class="view-all-link" id="view-all-link"></p>
+            <p class="view-all-link" id="view-all-link">
+                <a href="publications.html">View all publications →</a>
+            </p>
         </section>
     </main>
 
     <!-- Footer -->
-    <div id="site-footer"></div>
+    <div id="site-footer">
+        <footer class="footer">
+            <div class="footer-logos">
+                <a href="https://www.uclm.es/?sc_lang=en" target="_blank" rel="noopener">
+                    <img src="img/uclm.png" alt="UCLM" class="footer-logo">
+                </a>
+                <a href="https://simd.i3a.uclm.es/" target="_blank" rel="noopener">
+                    <img src="img/simd_eng.png" alt="SIMD" class="footer-logo">
+                </a>
+            </div>
+            <p class="footer-text">© 2026 Pablo Torrijos Arenas · University of Castilla-La Mancha</p>
+        </footer>
+    </div>
 
     <!-- Scripts (order matters!) -->
     <script src="config.js?v=2.2"></script>

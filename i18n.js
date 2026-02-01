@@ -26,7 +26,7 @@ const I18N = {
         home: {
             aboutTitle: 'About Me',
             aboutText: `Predoctoral researcher in the <strong>Intelligent Systems and Data Mining (SIMD)</strong> 
-        group at I3A Institute, with FPU21/01074 grant. My work focuses on <strong>federated learning</strong> 
+        group at I3A Institute in Albacete, with FPU21/01074 contract. My work focuses on <strong>federated learning</strong> 
         of probabilistic graphical models such as <strong>Bayesian networks</strong>, developing algorithms 
         that enable learning from distributed data while preserving privacy.`,
             featuredTitle: 'Featured Publications',
@@ -85,7 +85,7 @@ const I18N = {
         home: {
             aboutTitle: 'Sobre mí',
             aboutText: `Investigador predoctoral en el grupo de <strong>Sistemas Inteligentes y Minería de Datos (SIMD)</strong> 
-        del Instituto I3A, con ayuda FPU21/01074. Mi trabajo se centra en el <strong>aprendizaje federado</strong> 
+        del Instituto en Insvestigación en Informática de Albacete (I3A), con un contrato FPU21/01074. Mi trabajo se centra en el <strong>aprendizaje federado</strong> 
         de modelos gráficos probabilísticos como las <strong>redes bayesianas</strong>, desarrollando algoritmos 
         que permiten aprender de datos distribuidos preservando la privacidad.`,
             featuredTitle: 'Publicaciones Destacadas',
