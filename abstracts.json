@@ -1,0 +1,17 @@
+{
+    "Torrijos2026AAAI": "",
+    "Torrijos2026ML": "Learning the structure of Bayesian Networks (BNs) typically requires centralised access to data, which is often infeasible under privacy or governance constraints. We present Federated Greedy Equivalence Search (\textsc{FedGES}), a federated framework that learns BN structures by exchanging only Directed Acyclic Graphs (DAGs) between clients and a server, never raw data or sufficient statistics. Clients run GES locally with an edge-growth limit, and the server aggregates structures using thresholded consensus fusion or a min-cut-based consensus, iterating until convergence is achieved. With a score-consistent metric, \textsc{FedGES} preserves the theoretical guarantees of centralised GES and ensures finite termination. In experiments on 14 benchmark networks from {\sf bnlearn}'s repository (20 to 724 nodes) and up to 100 clients, \textsc{FedGES} attains lower Structural Moralized Hamming Distance (SMHD) and competitive or better runtime than state-of-the-art federated baselines. Communication scales with the number of edges rather than data size, improving efficiency. The structure-only protocol is privacy-enhancing by design and is compatible with secure aggregation and edge-level differential privacy to obtain formal guarantees. \textsc{FedGES} provides a scalable and effective solution for discovering BN structures when data cannot be centralised.",
+    "Torrijos2025WAFL": "",
+    "Torrijos2025GECCO": "",
+    "Torrijos2025MAEB": "",
+    "Laborda2024KBS": "",
+    "Laborda2024IJAR": "",
+    "Torrijos2025DS": "",
+    "Torrijos2024CEC": "",
+    "Torrijos2024IDEAL": "",
+    "Laborda2024MCTS": "",
+    "Torrijos2024CAEPIA-MAEB": "",
+    "Laborda2024CAEPIA": "",
+    "Torrijos2023EANN": "",
+    "Laborda2023ECSQARU": ""
+}

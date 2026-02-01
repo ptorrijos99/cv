@@ -828,3 +828,106 @@ a:hover {
     visibility: hidden !important;
     content: none !important;
 }
+
+/* ========================================
+   Interactive Publication Features
+   ======================================== */
+.pub-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-light);
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 3px 8px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all var(--transition);
+    font-family: var(--font-sans);
+    margin-right: 4px;
+}
+
+.pub-action-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--surface-alt);
+}
+
+.pub-action-btn.active {
+    background: var(--surface-alt);
+    border-color: var(--text-light);
+    color: var(--text);
+}
+
+.pub-expandable {
+    display: none;
+    margin-top: var(--space-sm);
+    padding: var(--space-md);
+    background: var(--surface-alt);
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    border: 1px solid var(--border);
+    animation: slideDown 0.2s ease-out;
+}
+
+.pub-expandable.open {
+    display: block;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.pub-abstract-text {
+    line-height: 1.6;
+    color: var(--text);
+    margin: 0;
+    font-style: italic;
+}
+
+.pub-bibtex-container {
+    position: relative;
+}
+
+.pub-bibtex-code {
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.8rem;
+    white-space: pre-wrap;
+    word-break: break-all;
+    background: white;
+    padding: var(--space-md) var(--space-sm) var(--space-sm);
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    color: #444;
+    overflow-x: auto;
+    margin: 0;
+}
+
+.pub-bibtex-copy-btn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    cursor: pointer;
+    color: var(--text-light);
+    z-index: 2;
+}
+
+.pub-bibtex-copy-btn:hover {
+    color: var(--primary);
+    border-color: var(--primary);
+}

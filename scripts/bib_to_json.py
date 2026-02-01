@@ -23,6 +23,7 @@ def parse_bib_file(bib_path: str) -> list[dict]:
     while i < n:
         if content[i] == '@':
             # Start of entry
+            entry_start_idx = i
             i += 1
             type_start = i
             while i < n and content[i].isalpha():
@@ -107,10 +108,14 @@ def parse_bib_file(bib_path: str) -> list[dict]:
                 while i < n and content[i].isspace(): i += 1
                 if i < n and content[i] == ',': i += 1
             
+            # Define raw_bibtex based on captured indices
+            raw_bibtex_entry = content[entry_start_idx:i]
+
             # Process Entry
             pub = {
                 'id': key,
-                'type': 'journal' if entry_type == 'article' else 'conference'
+                'type': 'journal' if entry_type == 'article' else 'conference',
+                'raw_bibtex': raw_bibtex_entry.strip()
             }
             
             for f_name, f_val in fields.items():
@@ -135,6 +140,7 @@ def parse_bib_file(bib_path: str) -> list[dict]:
                 elif f_name == 'arxiv': pub['arxiv'] = cleaned
                 elif f_name == 'url': pub['url'] = cleaned
                 elif f_name == 'featured': pub['featured'] = (cleaned.lower() == 'true')
+                elif f_name == 'abstract': pub['abstract'] = cleaned
                 elif f_name == 'author': 
                     pub['authors'] = [a.strip() for a in cleaned.split(' and ')]
 
@@ -200,6 +206,20 @@ def calculate_stats(publications: list[dict]) -> dict:
     return stats
 
 
+def load_abstracts(root_dir: Path) -> dict:
+    """Load abstracts from abstracts.json."""
+    abstracts_path = root_dir / 'abstracts.json'
+    if not abstracts_path.exists():
+        return {}
+    
+    try:
+        with open(abstracts_path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Warning: Could not load abstracts.json: {e}")
+        return {}
+
+
 def main():
     # Paths
     script_dir = Path(__file__).parent
@@ -210,6 +230,14 @@ def main():
     print(f"Reading {bib_path}...")
     publications = parse_bib_file(str(bib_path))
     
+    # Load and merge abstracts
+    abstracts = load_abstracts(root_dir)
+    print(f"Loaded {len(abstracts)} abstracts.")
+    
+    for pub in publications:
+        if pub['id'] in abstracts:
+            pub['abstract'] = abstracts[pub['id']]
+
     stats = calculate_stats(publications)
     
     output = {

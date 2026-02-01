@@ -16,6 +16,37 @@ function copyToClipboard(text, button) {
   });
 }
 
+// Global functions for toggles (attached to window to be accessible from inline onClick)
+window.toggleAbstract = function (id) {
+  const el = document.getElementById(`abstract-${id}`);
+  const btn = document.querySelector(`button[onclick="toggleAbstract('${id}')"]`);
+  if (el) {
+    el.classList.toggle('open');
+    btn.classList.toggle('active');
+  }
+};
+
+window.toggleBibtex = function (id) {
+  const el = document.getElementById(`bibtex-${id}`);
+  const btn = document.querySelector(`button[onclick="toggleBibtex('${id}')"]`);
+  if (el) {
+    el.classList.toggle('open');
+    btn.classList.toggle('active');
+  }
+};
+
+window.copyBibtex = function (id) {
+  const codeEl = document.getElementById(`bibcode-${id}`);
+  const btn = document.querySelector(`button[onclick="copyBibtex('${id}')"]`);
+  if (codeEl && btn) {
+    const text = codeEl.innerText;
+    copyToClipboard(text, btn);
+    btn.innerHTML = 'Copied!';
+    setTimeout(() => { btn.innerHTML = 'Copy'; }, 1500);
+  }
+};
+
+
 function getPubLinks(pub) {
   let links = '';
   if (pub.doi) {
@@ -64,6 +95,27 @@ function renderPublicationCard(pub, highlightAuthor, index) {
           <h3 class="pub-title">${title}</h3>
           <p class="pub-authors">${authors}</p>
           <div class="pub-links">${links}</div>
+          
+          <div class="pub-expandables-controls" style="margin-top: 8px;">
+            ${pub.abstract ? `<button class="pub-action-btn" onclick="toggleAbstract('${pub.id}')">📄 Abstract</button>` : ''}
+            ${pub.raw_bibtex ? `<button class="pub-action-btn" onclick="toggleBibtex('${pub.id}')">❝ BibTeX</button>` : ''}
+          </div>
+
+          ${pub.abstract ? `
+            <div id="abstract-${pub.id}" class="pub-expandable">
+              <p class="pub-abstract-text">${pub.abstract}</p>
+            </div>
+          ` : ''}
+
+          ${pub.raw_bibtex ? `
+            <div id="bibtex-${pub.id}" class="pub-expandable">
+              <div class="pub-bibtex-container">
+                 <button class="pub-bibtex-copy-btn" onclick="copyBibtex('${pub.id}')">Copy</button>
+                 <pre class="pub-bibtex-code" id="bibcode-${pub.id}">${pub.raw_bibtex}</pre>
+              </div>
+            </div>
+          ` : ''}
+          
         </div>
       </div>
     </article>
@@ -71,6 +123,7 @@ function renderPublicationCard(pub, highlightAuthor, index) {
 }
 
 function renderSimpleCard(pub, highlightAuthor) {
+  // Simple card reused for "Featured" section - typically simpler
   const typeClass = pub.type || 'conference';
   const authors = formatAuthors(pub.authors, highlightAuthor);
   const title = pub.title.replace(/^\{+/, '').replace(/\}+$/, '');
