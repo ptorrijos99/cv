@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://ptorrijos99.github.io/cv/sitemap.xml
