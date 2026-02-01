@@ -601,6 +601,8 @@ a:hover {
     flex-wrap: wrap;
     gap: var(--space-xs);
     margin-top: var(--space-sm);
+    align-items: center;
+    /* Align items vertically */
 }
 
 .pub-link {
@@ -616,6 +618,11 @@ a:hover {
     border-radius: var(--radius);
     transition: background var(--transition);
     text-decoration: none;
+    border: 1px solid var(--surface-alt);
+    /* Add transparent border to match buttons */
+    height: 24px;
+    /* Fixed height for alignment */
+    line-height: 1;
 }
 
 .pub-link:hover {
@@ -630,6 +637,8 @@ a:hover {
     border-radius: var(--radius);
     overflow: hidden;
     border: 1px solid transparent;
+    /* Match general border style or keep transparent */
+    height: 24px;
     /* Keep border logic */
 }
 
@@ -641,6 +650,8 @@ a:hover {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     margin: 0;
+    height: 100%;
+    /* Fill container */
 }
 
 /* Ensure copy button matches height/style */
@@ -651,13 +662,16 @@ a:hover {
     border: none;
     background: var(--surface-alt);
     /* Match link bg */
-    padding: 4px 8px;
+    padding: 0 8px;
+    /* Adjustment for height */
     cursor: pointer;
     border-left: 1px solid rgba(0, 0, 0, 0.05);
     color: var(--text-light);
     font-size: 0.7rem;
     transition: all var(--transition);
     font-family: var(--font-sans);
+    height: 100%;
+    /* Fill container */
 }
 
 .pub-copy:hover {
@@ -838,27 +852,42 @@ a:hover {
     gap: 4px;
     font-size: 0.75rem;
     font-weight: 500;
-    color: var(--text-light);
-    background: transparent;
-    border: 1px solid var(--border);
-    padding: 3px 8px;
+    color: var(--primary);
+    /* Matched to link color */
+    background: var(--surface-alt);
+    /* Matched to link bg */
+    border: 1px solid var(--surface-alt);
+    /* Matched border */
+    padding: 0 8px;
+    /* Adjustment for height */
     border-radius: var(--radius);
     cursor: pointer;
     transition: all var(--transition);
     font-family: var(--font-sans);
-    margin-right: 4px;
+    margin-right: 0;
+    /* Align with gap in parent */
+    height: 24px;
+    /* Fixed height for alignment */
+    line-height: 1;
 }
 
 .pub-action-btn:hover {
-    border-color: var(--primary);
-    color: var(--primary);
-    background: var(--surface-alt);
+    border-color: var(--border);
+    /* Matched border hover */
+    color: var(--primary-dark);
+    background: var(--border);
+    /* Matched bg hover */
 }
 
 .pub-action-btn.active {
-    background: var(--surface-alt);
-    border-color: var(--text-light);
-    color: var(--text);
+    background: var(--primary);
+    border-color: var(--primary);
+    color: var(--text-inverse);
+}
+
+.pub-action-btn svg {
+    width: 12px;
+    height: 12px;
 }
 
 .pub-expandable {
@@ -911,6 +940,8 @@ a:hover {
     color: #444;
     overflow-x: auto;
     margin: 0;
+    max-height: 300px;
+    overflow-y: auto;
 }
 
 .pub-bibtex-copy-btn {
@@ -931,3 +962,32 @@ a:hover {
     color: var(--primary);
     border-color: var(--primary);
 }
+
+/* BibTeX Syntax Highlighting */
+.bib-type {
+    color: #880000;
+    font-weight: bold;
+}
+
+/* @article */
+.bib-key {
+    color: #000088;
+    font-weight: bold;
+}
+
+/* Key */
+.bib-field {
+    color: #000088;
+}
+
+/* author, title */
+.bib-value {
+    color: #008800;
+}
+
+/* "Title" */
+.bib-number {
+    color: #880000;
+}
+
+/* 2026 */

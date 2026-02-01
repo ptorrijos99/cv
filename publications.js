@@ -46,6 +46,51 @@ window.copyBibtex = function (id) {
   }
 };
 
+function highlightBibtex(bibtex) {
+  if (!bibtex) return '';
+
+  // Filter out internal fields before highlighting
+  // Fields to exclude: ranking, featured, arxiv (if present as field), category, etc.
+  const fieldsToRemove = ['ranking', 'featured', 'category', 'arxiv', 'url'];
+
+  let lines = bibtex.split('\n');
+  let filteredLines = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    // Check if line contains a forbidden field
+    let shouldSkip = false;
+    // Simple check: "  field =" or "  field="
+    const match = line.match(/^\s*([a-zA-Z0-9_-]+)\s*=/);
+    if (match && fieldsToRemove.includes(match[1].toLowerCase())) {
+      shouldSkip = true;
+    }
+
+    // Also skip empty lines or trailing commas if previous line was skipped?
+    // A simple regex approach works better on the full string or line-by-line carefully.
+    // For now, simple line skipping is safe enough for standard formatted bibtex from our script.
+
+    if (!shouldSkip) {
+      filteredLines.push(line);
+    }
+  }
+
+  // Clean up trailing comma on the last field if the previous last field was removed
+  // This is tricky without a proper parser, but let's try a regex replace on the joined string.
+  let cleanedBibtex = filteredLines.join('\n');
+  // Remove empty lines resulting from filtering that might look ugly
+  cleanedBibtex = cleanedBibtex.replace(/^\s*[\r\n]/gm, '');
+
+  // Syntax Highlighting
+  return cleanedBibtex
+    .replace(/(@\w+)/g, '<span class="bib-type">$1</span>') // Entry type
+    .replace(/({)(\w+)(,)/, '$1<span class="bib-key">$2</span>$3') // Key
+    .replace(/^\s*(\w+)\s*=/gm, '<span class="bib-field">  $1</span> =') // Field names
+    .replace(/(=)\s*({[^}]*})/g, '$1 <span class="bib-value">$2</span>') // Braced Values
+    .replace(/(=)\s*([0-9]+)/g, '$1 <span class="bib-number">$2</span>'); // Numbers
+}
+
 
 function getPubLinks(pub) {
   let links = '';
@@ -70,6 +115,23 @@ function getPubLinks(pub) {
   if (pub.url && !pub.doi) {
     links += `<a href="${pub.url}" target="_blank" rel="noopener" class="pub-link">🔗 Link</a>`;
   }
+
+  // Add Action Buttons (Abstract / BibTeX) into the links area, aligned to the right or inline
+
+  if (pub.abstract) {
+    links += `<button class="pub-action-btn" onclick="toggleAbstract('${pub.id}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            Abstract
+        </button>`;
+  }
+
+  if (pub.raw_bibtex) {
+    links += `<button class="pub-action-btn" onclick="toggleBibtex('${pub.id}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            BibTeX
+        </button>`;
+  }
+
   return links;
 }
 
@@ -80,6 +142,12 @@ function renderPublicationCard(pub, highlightAuthor, index) {
   const venue = (pub.venue || '').replace(/^\{+/, '').replace(/\}+$/, '');
   const links = getPubLinks(pub);
   const ranking = pub.ranking ? `<span class="pub-rank">${pub.ranking}</span>` : '';
+
+  const highlightedBibtex = highlightBibtex(pub.raw_bibtex);
+
+  // We are putting the buttons INSIDE the links area now, so remove them from separate div
+  // But strictly speaking, the user said "pegado a la derecha del todo". 
+  // Flexbox on .pub-links with gap handles spacing nicely.
 
   return `
     <article class="timeline-item" data-category="${typeClass}" data-year="${pub.year}" style="--delay: ${(index % 5) * 0.1}s">
@@ -95,11 +163,6 @@ function renderPublicationCard(pub, highlightAuthor, index) {
           <h3 class="pub-title">${title}</h3>
           <p class="pub-authors">${authors}</p>
           <div class="pub-links">${links}</div>
-          
-          <div class="pub-expandables-controls" style="margin-top: 8px;">
-            ${pub.abstract ? `<button class="pub-action-btn" onclick="toggleAbstract('${pub.id}')">📄 Abstract</button>` : ''}
-            ${pub.raw_bibtex ? `<button class="pub-action-btn" onclick="toggleBibtex('${pub.id}')">❝ BibTeX</button>` : ''}
-          </div>
 
           ${pub.abstract ? `
             <div id="abstract-${pub.id}" class="pub-expandable">
@@ -111,7 +174,9 @@ function renderPublicationCard(pub, highlightAuthor, index) {
             <div id="bibtex-${pub.id}" class="pub-expandable">
               <div class="pub-bibtex-container">
                  <button class="pub-bibtex-copy-btn" onclick="copyBibtex('${pub.id}')">Copy</button>
-                 <pre class="pub-bibtex-code" id="bibcode-${pub.id}">${pub.raw_bibtex}</pre>
+                 <pre class="pub-bibtex-code" id="bibcode-${pub.id}">${highlightedBibtex}</pre>
+                 <div style="display:none;" id="raw-bib-${pub.id}">${pub.raw_bibtex}</div> 
+                 <!-- Hidden div for copying raw unfiltered content if preferred, or copy innerText of code block -->
               </div>
             </div>
           ` : ''}
