@@ -126,6 +126,26 @@ function getPubLinks(pub) {
   return links;
 }
 
+function parseLatex(text) {
+  if (!text) return '';
+
+  return text
+    // Replace logic for common LaTeX commands
+    .replace(/\\textsc{([^}]+)}/g, '<span class="latex-sc">$1</span>')
+    .replace(/{\\sf ([^}]+)}/g, '<span class="latex-sf">$1</span>')
+    .replace(/\\textsf{([^}]+)}/g, '<span class="latex-sf">$1</span>')
+    .replace(/\\textit{([^}]+)}/g, '<span class="latex-it">$1</span>')
+    .replace(/{\\it ([^}]+)}/g, '<span class="latex-it">$1</span>')
+    .replace(/\\textbf{([^}]+)}/g, '<span class="latex-bf">$1</span>')
+    .replace(/{\\bf ([^}]+)}/g, '<span class="latex-bf">$1</span>')
+    .replace(/\\texttt{([^}]+)}/g, '<span class="latex-tt">$1</span>')
+    .replace(/\\emph{([^}]+)}/g, '<em>$1</em>')
+    .replace(/---/g, '&mdash;')
+    .replace(/--/g, '&ndash;')
+    .replace(/~/g, '&nbsp;')
+    .replace(/\$([^$]+)\$/g, '<span class="latex-it">$1</span>'); // Simple math -> italic
+}
+
 function renderPublicationCard(pub, highlightAuthor, index) {
   const typeClass = pub.type || 'conference';
   const authors = formatAuthors(pub.authors, highlightAuthor);
@@ -135,6 +155,7 @@ function renderPublicationCard(pub, highlightAuthor, index) {
   const ranking = pub.ranking ? `<span class="pub-rank">${pub.ranking}</span>` : '';
 
   const highlightedBibtex = highlightBibtex(pub.raw_bibtex);
+  const parsedAbstract = parseLatex(pub.abstract);
 
   return `
     <article class="timeline-item" data-category="${typeClass}" data-year="${pub.year}" style="--delay: ${(index % 5) * 0.1}s">
@@ -153,7 +174,7 @@ function renderPublicationCard(pub, highlightAuthor, index) {
 
           ${pub.abstract ? `
             <div id="abstract-${pub.id}" class="pub-expandable">
-              <p class="pub-abstract-text">${pub.abstract}</p>
+              <p class="pub-abstract-text">${parsedAbstract}</p>
             </div>
           ` : ''}
 
