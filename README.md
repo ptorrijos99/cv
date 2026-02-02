@@ -2,8 +2,7 @@
 
 This repository hosts the personal academic website and CV of **Pablo Torrijos Arenas**, Researcher at the University of Castilla-La Mancha (UCLM).
 
-🌐 **Live Website**: [https://ptorrijos99.github.io/cv/](https://ptorrijos99.github.io/cv/)
-
+🌐 **Live Website**: [https://pablotorrijos.es/](https://pablotorrijos.es/)
 
 ## 🛠️ Maintenance
 
